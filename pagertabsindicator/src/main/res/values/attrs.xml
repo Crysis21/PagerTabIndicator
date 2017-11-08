@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PagerTabsIndicator">
+        <attr name="tab_text_color"/>
+        <attr name="tab_text_size"/>
+        <attr name="tab_show_divider"/>
+        <attr name="tab_fixed_size"/>
+    </declare-styleable>
+</resources>
