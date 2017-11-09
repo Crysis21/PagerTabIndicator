@@ -1,9 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="PagerTabsIndicator">
-        <attr name="tab_text_color"/>
-        <attr name="tab_text_size"/>
-        <attr name="tab_show_divider"/>
-        <attr name="tab_fixed_size"/>
+        <attr name="tab_padding" format="dimension"/>
+        <attr name="tab_text_color" format="color"/>
+        <attr name="tab_text_size" format="dimension"/>
+        <attr name="tab_show_divider" format="boolean"/>
+        <attr name="tab_lock_expanded" format="boolean"/>
+        <attr name="tab_indicator"/>
+        <attr name="tab_indicator_resource" format="reference"/>
+        <attr name="tab_indicator_height" format="dimension"/>
+        <attr name="tab_indicator_margin" format="dimension"/>
+        <attr name="tab_indicator_bg_height" format="dimension"/>
+        <attr name="tab_indicator_color" format="color"/>
+        <attr name="tab_indicator_bg_color" format="color"/>
+        <attr name="tab_divider_width" format="dimension"/>
+        <attr name="tab_divider_margin" format="dimension"/>
+        <attr name="tab_divider_color" format="color"/>
+        <attr name="tab_divider_resource" format="reference"/>
     </declare-styleable>
+
+    <attr name="tab_indicator">
+        <enum name="top_bar" value="0" />
+        <enum name="bottom_bar" value="1" />
+        <enum name="background" value="2" />
+        <enum name="custom" value="3" />
+    </attr>
 </resources>

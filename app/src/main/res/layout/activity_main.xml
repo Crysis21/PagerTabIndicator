@@ -20,10 +20,11 @@
 
     <com.hold1.pagertabsindicator.PagerTabsIndicator
         android:layout_width="0dp"
-        android:background="#ff00ff"
         android:layout_height="64dp"
         android:id="@+id/tabs_indicator"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
 </android.support.constraint.ConstraintLayout>

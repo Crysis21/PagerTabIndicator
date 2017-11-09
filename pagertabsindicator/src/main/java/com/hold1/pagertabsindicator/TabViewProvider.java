@@ -11,6 +11,8 @@ public class TabViewProvider {
 
     public interface ImageProvider {
         Uri getImageUri(int position);
+
+        int getImageResourceId(int position);
     }
     
     public interface CustomView {

@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="tab_default_text_color">#363636</color>
+    <color name="tab_default_divider_color">#595959</color>
     <dimen name="tab_default_text_size">16dp</dimen>
+    <dimen name="tab_default_indicator_height">8dp</dimen>
+    <dimen name="tab_default_indicator_bg_height">8dp</dimen>
+    <dimen name="tab_default_divider_width">1px</dimen>
+    <dimen name="tab_default_divider_margin">10dp</dimen>
+    <dimen name="tab_default_padding">12dp</dimen>
 </resources>
