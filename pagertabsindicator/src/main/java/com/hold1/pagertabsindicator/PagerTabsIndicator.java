@@ -7,7 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.net.Uri;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -36,7 +36,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private static final int TAB_INDICATOR_TOP = 0;
     private static final int TAB_INDICATOR_BOTTOM = 1;
     private static final int TAB_INDICATOR_BACKGROUND = 2;
-    private static final int TAB_INDICATOR_CUSTOM = 3;
 
     private LinearLayout tabsContainer;
     private ViewPager viewPager;
@@ -53,6 +52,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private int indicatorMargin = 0;
     private int indicatorColor;
     private int indicatorBgColor;
+    private Drawable indicatorDrawable;
     //Use this if you want a custom resource to be drawn as tab indicator
     private Paint bgPaing;
     private int indicatorResource = 0;
@@ -149,6 +149,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         dividerPaint.setColor(dividerColor);
         dividerPaint.setStyle(Paint.Style.FILL);
         dividerPaint.setAntiAlias(true);
+
     }
 
 
@@ -180,7 +181,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 lp.bottomMargin = indicatorBgHeight;
                 break;
         }
-        
+
         super.measureChildWithMargins(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
 
@@ -207,15 +208,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 tabView = ((TabViewProvider.CustomView) viewPager.getAdapter()).getView(i);
             } else if (viewPager.getAdapter() instanceof TabViewProvider.ImageProvider) {
                 TabViewProvider.ImageProvider imageProvider = (TabViewProvider.ImageProvider) viewPager.getAdapter();
-                Uri imageUri = imageProvider.getImageUri(i);
-                if (imageUri == null) {
-                    String resourceScheme = "res";
-                    imageUri = new Uri.Builder()
-                            .scheme(resourceScheme)
-                            .path(String.valueOf(imageProvider.getImageUri(i)))
-                            .build();
+                tabView = createImageView();
+                if (imageProvider.getImageUri(i) != null) {
+                    Glide.with(getContext()).load(imageProvider.getImageUri(i)).into((ImageView) tabView);
+                } else if (imageProvider.getImageResourceId(position) != 0) {
+                    ((ImageView) tabView).setImageResource(imageProvider.getImageResourceId(position));
                 }
-                tabView = createImageView(imageUri);
             } else {
                 tabView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
             }
@@ -233,17 +231,15 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         return textView;
     }
 
-    private View createImageView(Uri imageUri) {
+    private View createImageView() {
         ImageView imageView = new ImageView(getContext());
-        imageView.setImageURI(imageUri);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        Glide.with(getContext()).load(imageUri).into(imageView);
         return imageView;
     }
 
     private void addTabView(View view, final int position) {
         tabsContainer.addView(view, new LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT));
-        view.setPadding(50,0,50,0);
+        view.setPadding(50, 0, 50, 0);
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {

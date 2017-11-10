@@ -1,4 +1,4 @@
-package com.hold1.pagertabsdemo;
+package com.hold1.pagertabsdemo.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.lzyzsd.randomcolor.RandomColor;
+import com.hold1.pagertabsdemo.R;
 
 /**
  * Created by Cristian Holdunu on 08/11/2017.
