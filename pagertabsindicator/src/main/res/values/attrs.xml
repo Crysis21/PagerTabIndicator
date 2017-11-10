@@ -17,6 +17,7 @@
         <attr name="tab_divider_margin" format="dimension"/>
         <attr name="tab_divider_color" format="color"/>
         <attr name="tab_divider_resource" format="reference"/>
+        <attr name="tab_hide_bar_indicator" format="boolean"/>
     </declare-styleable>
 
     <attr name="tab_indicator">

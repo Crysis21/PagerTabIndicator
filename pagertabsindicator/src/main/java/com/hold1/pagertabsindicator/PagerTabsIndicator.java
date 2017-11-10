@@ -6,6 +6,7 @@ import android.database.DataSetObserver;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
@@ -55,7 +56,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private Drawable indicatorDrawable;
     //Use this if you want a custom resource to be drawn as tab indicator
     private Paint bgPaing;
-    private int indicatorResource = 0;
+    private int indicatorResource = -1;
     private Paint tintPaint;
     private Paint dividerPaint;
 
@@ -68,11 +69,13 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private int dividerColor = Color.BLACK;
     // Use this if you want a custom resource drawn in tab divider
     private int dividerResource = -1;
+    private Drawable dividerDrawable;
 
 
     private int textColor;
     private int tabPadding;
     private boolean lockExpanded = false;
+    private boolean hideBarIndicator = false;
 
     //ViePager data
     private int position = 0;
@@ -122,7 +125,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         showDivider = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_divider, showDivider);
         lockExpanded = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_lock_expanded, lockExpanded);
         indicatorType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator, indicatorType);
-        indicatorResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_indicator_resource, 0);
+        indicatorResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_indicator_resource, indicatorResource);
         indicatorHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_height, indicatorHeight);
         indicatorMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_margin, indicatorMargin);
         indicatorBgHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_bg_height, indicatorBgHeight);
@@ -132,6 +135,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         dividerMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_divider_margin, dividerMargin);
         dividerColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_divider_color, dividerColor);
         dividerResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_divider_resource, dividerResource);
+        hideBarIndicator = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_hide_bar_indicator, hideBarIndicator);
 
         typedArray.recycle();
 
@@ -150,6 +154,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         dividerPaint.setStyle(Paint.Style.FILL);
         dividerPaint.setAntiAlias(true);
 
+        if (indicatorResource != -1) {
+            indicatorDrawable = getResources().getDrawable(indicatorResource);
+        }
+        if (dividerResource != -1) {
+            dividerDrawable = getResources().getDrawable(dividerResource);
+        }
     }
 
 
@@ -160,7 +170,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
         final int childCount = tabsContainer.getChildCount();
         if (lockExpanded) {
-            int newTabWidth = newWidth / childCount;
+            int newTabWidth = Math.round(newWidth / childCount);
             if (newTabWidth == 0 || newTabWidth == tabWidth) return;
             tabWidth = newTabWidth;
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
@@ -173,14 +183,15 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     @Override
     protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
-        switch (indicatorType) {
-            case TAB_INDICATOR_TOP:
-                lp.topMargin = indicatorBgHeight;
-                break;
-            case TAB_INDICATOR_BOTTOM:
-                lp.bottomMargin = indicatorBgHeight;
-                break;
-        }
+        if (!hideBarIndicator)
+            switch (indicatorType) {
+                case TAB_INDICATOR_TOP:
+                    lp.topMargin = indicatorBgHeight;
+                    break;
+                case TAB_INDICATOR_BOTTOM:
+                    lp.bottomMargin = indicatorBgHeight;
+                    break;
+            }
 
         super.measureChildWithMargins(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
@@ -203,20 +214,23 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         tabsContainer.removeAllViews();
 
         for (int i = 0; i < viewPager.getAdapter().getCount(); i++) {
-            View tabView;
+            View innerView;
             if (viewPager.getAdapter() instanceof TabViewProvider.CustomView) {
-                tabView = ((TabViewProvider.CustomView) viewPager.getAdapter()).getView(i);
+                innerView = ((TabViewProvider.CustomView) viewPager.getAdapter()).getView(i);
             } else if (viewPager.getAdapter() instanceof TabViewProvider.ImageProvider) {
                 TabViewProvider.ImageProvider imageProvider = (TabViewProvider.ImageProvider) viewPager.getAdapter();
-                tabView = createImageView();
+                innerView = createImageView();
                 if (imageProvider.getImageUri(i) != null) {
-                    Glide.with(getContext()).load(imageProvider.getImageUri(i)).into((ImageView) tabView);
+                    Glide.with(getContext()).load(imageProvider.getImageUri(i)).into((ImageView) innerView);
                 } else if (imageProvider.getImageResourceId(position) != 0) {
-                    ((ImageView) tabView).setImageResource(imageProvider.getImageResourceId(position));
+                    ((ImageView) innerView).setImageResource(imageProvider.getImageResourceId(position));
                 }
             } else {
-                tabView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
+                innerView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
             }
+
+            TabView tabView = new TabView(getContext());
+            tabView.addView(innerView);
             addTabView(tabView, i);
         }
     }
@@ -274,47 +288,65 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!hideBarIndicator) {
+            bgRect.left = 0;
+            bgRect.right = tabsContainer.getRight();
 
-        bgRect.left = 0;
-        bgRect.right = tabsContainer.getRight();
+            View currentTab = tabsContainer.getChildAt(position);
+            indicatorRect.left = currentTab.getLeft();
+            indicatorRect.right = currentTab.getRight();
 
-        View currentTab = tabsContainer.getChildAt(position);
-        indicatorRect.left = currentTab.getLeft();
-        indicatorRect.right = currentTab.getRight();
+            if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1) {
+                View nextTab = tabsContainer.getChildAt(position + 1);
+                indicatorRect.left = (positionOffset * nextTab.getLeft() + (1f - positionOffset) * indicatorRect.left);
+                indicatorRect.right = (positionOffset * nextTab.getRight() + (1f - positionOffset) * indicatorRect.right);
+            }
 
-        if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1) {
-            View nextTab = tabsContainer.getChildAt(position + 1);
-            indicatorRect.left = (positionOffset * nextTab.getLeft() + (1f - positionOffset) * indicatorRect.left);
-            indicatorRect.right = (positionOffset * nextTab.getRight() + (1f - positionOffset) * indicatorRect.right);
+            //draw slider
+            switch (indicatorType) {
+                case TAB_INDICATOR_TOP:
+                    bgRect.top = 0;
+                    bgRect.bottom = indicatorHeight;
+                    indicatorRect.top = indicatorMargin;
+                    indicatorRect.bottom = indicatorHeight + indicatorMargin;
+                    break;
+                case TAB_INDICATOR_BOTTOM:
+                default:
+                    bgRect.top = getHeight() - indicatorHeight;
+                    bgRect.bottom = getHeight();
+                    indicatorRect.top = getHeight() - indicatorHeight - indicatorMargin;
+                    indicatorRect.bottom = getHeight() - indicatorMargin;
+            }
+
+            canvas.drawRect(bgRect, bgPaing);
+            canvas.drawRect(indicatorRect, tintPaint);
         }
-
-        //draw slider
-        switch (indicatorType) {
-            case TAB_INDICATOR_TOP:
-                bgRect.top = 0;
-                bgRect.bottom = indicatorHeight;
-                indicatorRect.top = indicatorMargin;
-                indicatorRect.bottom = indicatorHeight + indicatorMargin;
-                break;
-            case TAB_INDICATOR_BOTTOM:
-            default:
-                bgRect.top = getHeight() - indicatorHeight;
-                bgRect.bottom = getHeight();
-                indicatorRect.top = getHeight() - indicatorHeight - indicatorMargin;
-                indicatorRect.bottom = getHeight() - indicatorMargin;
-        }
-
-        canvas.drawRect(bgRect, bgPaing);
-        canvas.drawRect(indicatorRect, tintPaint);
-
         //draw divider
+        if (!showDivider) return;
+        drawDivider(canvas);
+
+    }
+
+    private void drawDivider(Canvas canvas) {
         for (int i = 0; i < tabsContainer.getChildCount() - 1; i++) {
             View tab = tabsContainer.getChildAt(i);
-            float startX = tab.getRight() - dividerWidth / 2;
-            float endX = startX + dividerWidth;
-            float startY = dividerMargin;
-            float endY = getHeight() - indicatorBgHeight - dividerMargin;
-            canvas.drawRect(startX, startY, endX, endY, dividerPaint);
+            int startX = tab.getRight() - dividerWidth / 2;
+            int endX = startX + dividerWidth;
+            int startY = 0;
+            int endY = getHeight();
+            if (indicatorType == TAB_INDICATOR_BOTTOM) {
+                startY = dividerMargin;
+                endY = getHeight() - indicatorBgHeight - dividerMargin;
+            } else if (indicatorType == TAB_INDICATOR_TOP) {
+                startY = indicatorBgHeight + dividerMargin;
+                endY = getHeight() - dividerMargin;
+            }
+            if (dividerDrawable == null)
+                canvas.drawRect(startX, startY, endX, endY, dividerPaint);
+            else {
+                dividerDrawable.setBounds(new Rect(startX, startY, endX, endY));
+                dividerDrawable.draw(canvas);
+            }
         }
     }
 
@@ -349,7 +381,8 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         for (int i = 0; i < tabCount; i++) {
             final View child = tabsContainer.getChildAt(i);
             final boolean isSelected = i == position;
-            child.setSelected(isSelected);
+            if (indicatorType == TAB_INDICATOR_BACKGROUND)
+                child.setSelected(isSelected);
             if (isSelected) {
                 animateToTab(position);
             }

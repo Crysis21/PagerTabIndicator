@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
  * Created by Cristian Holdunu on 09/11/2017.
  */
 
-public class TabView extends FrameLayout{
+public class TabView extends FrameLayout {
 
     public TabView(Context context) {
         super(context);
@@ -22,6 +22,10 @@ public class TabView extends FrameLayout{
 
     @Override
     public void setSelected(boolean selected) {
-        setBackgroundColor(Color.WHITE);
+        if (selected) {
+            setBackgroundColor(Color.WHITE);
+        } else {
+            setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 }
