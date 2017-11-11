@@ -21,15 +21,10 @@
         android:id="@+id/tabs_indicator"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        app:tab_indicator_bg_color="#ff00ff"
-        app:tab_indicator_color="#0000ff"
-        app:tab_divider_width="10dp"
-        app:tab_indicator="top_bar"
+        app:tab_indicator="background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tab_hide_bar_indicator="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:tab_divider_resource="@drawable/divider_diag"
         app:tab_lock_expanded="true" />
 
 </android.support.constraint.ConstraintLayout>

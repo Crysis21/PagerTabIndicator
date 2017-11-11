@@ -1,16 +1,28 @@
 apply plugin: 'com.android.library'
 
+group = 'com.hold1'
+project.archivesBaseName = 'pagertabsindicator'
+version = '1.0.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+
 android {
     compileSdkVersion 26
 
     defaultConfig {
         minSdkVersion 15
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
-
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
+        versionCode 1000
+        versionName = version
     }
 
     buildTypes {
@@ -26,4 +38,58 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
+}
+
+
+install {
+    repositories.mavenInstaller {
+        pom.project {
+            name 'PagerTabsIndicator'
+            description 'A flexible library for adding tabs to a view pager.'
+            url 'https://github.com/Crysis21/PagerTabIndicator'
+            inceptionYear '2017'
+
+            packaging 'aar'
+            groupId "com.hold1"
+            artifactId "pagertabsindicator"
+            version '1.0.0-SNAPSHOT'
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution 'repo'
+                }
+            }
+            scm {
+                connection 'https://github.com/Crysis21/PagerTabIndicator.git'
+                url 'https://github.com/Crysis21/PagerTabIndicator'
+
+            }
+            developers {
+                developer {
+                    name 'Cristian Holdunu'
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
+    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
+
+    pkg {
+        repo = 'generic'
+        name = 'gradle-project'
+        userOrg = 'Crysis21'
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+        version {
+            name = version
+            desc = 'PagerTabsIndicator ' + version
+            vcsTag = version
+            released  = new Date()
+        }
+    }
 }
