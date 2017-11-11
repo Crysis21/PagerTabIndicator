@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group = 'com.hold1'
-project.archivesBaseName = 'pagertabsindicator'
+project.archivesBaseName = 'pagertabindicator'
 version = '1.0.0'
 
 buildscript {
@@ -44,14 +44,14 @@ dependencies {
 install {
     repositories.mavenInstaller {
         pom.project {
-            name 'PagerTabsIndicator'
+            name 'PagerTabIndicator'
             description 'A flexible library for adding tabs to a view pager.'
             url 'https://github.com/Crysis21/PagerTabIndicator'
             inceptionYear '2017'
 
             packaging 'aar'
             groupId "com.hold1"
-            artifactId "pagertabsindicator"
+            artifactId "pagertabindicator"
             version '1.0.0'
 
             licenses {
@@ -76,21 +76,21 @@ install {
 }
 
 bintray {
-    user = System.getenv('BINTRAY_USER')
-    key = System.getenv('BINTRAY_KEY')
+    user = BINTRAY_USER
+    key = BINTRAY_KEY
     configurations = ['archives']
 
     pkg {
-        repo = 'PagerTabsIndicator'
-        name = 'PagerTabsIndicator'
+        repo = 'Android'
+        name = 'PagerTabIndicator'
         userOrg = 'crysis21'
         licenses = ['Apache-2.0']
         vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
         version {
             name = version
-            desc = 'PagerTabsIndicator ' + version
+            desc = 'PagerTabIndicator ' + version
             vcsTag = version
-            released  = new Date()
+            released = new Date()
             version {
                 name = '1.0.0'
                 desc = 'A flexible library for adding tabs to a view pager.'
