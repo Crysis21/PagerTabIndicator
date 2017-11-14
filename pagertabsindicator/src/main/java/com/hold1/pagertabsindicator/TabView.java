@@ -3,6 +3,7 @@ package com.hold1.pagertabsindicator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
@@ -11,9 +12,10 @@ import android.widget.FrameLayout;
  */
 
 public class TabView extends FrameLayout {
+    private static final String TAG = TabView.class.getSimpleName();
 
     private ValueAnimator bgAnimator;
-    private int pressColor = Color.RED;
+    private int pressColor = Color.TRANSPARENT;
     private int currentBgColor = pressColor;
 
     public TabView(Context context) {
@@ -34,15 +36,20 @@ public class TabView extends FrameLayout {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
+                bgAnimator.cancel();
                 setBackgroundColor(pressColor);
                 break;
-                case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_UP:
+                if (bgAnimator != null)
                     bgAnimator.start();
-                    break;
+                break;
         }
         return super.onTouchEvent(event);
+    }
 
+    public void onOffset(float offset) {
+        Log.d(TAG, "onOffset=" + offset);
     }
 }

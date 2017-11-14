@@ -8,6 +8,7 @@
         <attr name="tab_lock_expanded" format="boolean"/>
         <attr name="tab_indicator"/>
         <attr name="tab_indicator_resource" format="reference"/>
+        <attr name="tab_indicator_scale_type"/>
         <attr name="tab_indicator_height" format="dimension"/>
         <attr name="tab_indicator_margin" format="dimension"/>
         <attr name="tab_indicator_bg_height" format="dimension"/>
@@ -17,12 +18,18 @@
         <attr name="tab_divider_margin" format="dimension"/>
         <attr name="tab_divider_color" format="color"/>
         <attr name="tab_divider_resource" format="reference"/>
-        <attr name="tab_hide_bar_indicator" format="boolean"/>
+        <attr name="tab_show_bar_indicator" format="boolean"/>
+        <attr name="tab_elevation" format="dimension"/>
+        <attr name="tab_disable_animation" format="boolean"/>
     </declare-styleable>
 
     <attr name="tab_indicator">
         <enum name="top_bar" value="0" />
         <enum name="bottom_bar" value="1" />
         <enum name="background" value="2" />
+    </attr>
+    <attr name="tab_indicator_scale_type">
+        <enum name="fitXY" value="0"/>
+        <enum name="centerInside" value="1"/>
     </attr>
 </resources>

@@ -7,5 +7,5 @@
     <dimen name="tab_default_indicator_bg_height">8dp</dimen>
     <dimen name="tab_default_divider_width">1px</dimen>
     <dimen name="tab_default_divider_margin">10dp</dimen>
-    <dimen name="tab_default_padding">12dp</dimen>
+    <dimen name="tab_default_padding">6dp</dimen>
 </resources>

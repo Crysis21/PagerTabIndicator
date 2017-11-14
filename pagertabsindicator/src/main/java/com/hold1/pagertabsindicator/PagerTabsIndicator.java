@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -38,6 +39,9 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private static final int TAB_INDICATOR_BOTTOM = 1;
     private static final int TAB_INDICATOR_BACKGROUND = 2;
 
+    private static final int SCALE_FIT_XY = 0;
+    private static final int SCALE_CENTER_INSIDE = 1;
+
     private LinearLayout tabsContainer;
     private ViewPager viewPager;
 
@@ -57,6 +61,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     //Use this if you want a custom resource to be drawn as tab indicator
     private Paint bgPaing;
     private int indicatorResource = -1;
+    private int indicatorScaleType = SCALE_CENTER_INSIDE;
     private Paint tintPaint;
     private Paint dividerPaint;
 
@@ -66,6 +71,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private boolean showDivider = true;
     private int dividerWidth = 2;
     private int dividerMargin = 10;
+    private int elevation = 6;
     private int dividerColor = Color.BLACK;
     // Use this if you want a custom resource drawn in tab divider
     private int dividerResource = -1;
@@ -75,10 +81,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private int textColor;
     private int tabPadding;
     private boolean lockExpanded = false;
-    private boolean hideBarIndicator = false;
+    private boolean showBarIndicator = true;
+    private boolean disableTabAnimation = false;
 
     //ViePager data
     private int position = 0;
+    private int oldPosition = 0;
     private int targetPosition = -1;
     private float positionOffset = 0;
     private int lastScrollX = 0;
@@ -87,7 +95,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private Runnable runnable;
 
     private RectF bgRect = new RectF();
-    private RectF indicatorRect = new RectF();
+    private Rect indicatorRect = new Rect();
 
     public PagerTabsIndicator(Context context) {
         super(context, null);
@@ -127,15 +135,18 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         indicatorType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator, indicatorType);
         indicatorResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_indicator_resource, indicatorResource);
         indicatorHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_height, indicatorHeight);
-        indicatorMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_margin, indicatorMargin);
         indicatorBgHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_bg_height, indicatorBgHeight);
+        indicatorMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_margin, indicatorMargin);
         indicatorColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_color, indicatorColor);
         indicatorBgColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_bg_color, indicatorBgColor);
         dividerWidth = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_divider_width, dividerWidth);
         dividerMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_divider_margin, dividerMargin);
         dividerColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_divider_color, dividerColor);
         dividerResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_divider_resource, dividerResource);
-        hideBarIndicator = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_hide_bar_indicator, hideBarIndicator);
+        showBarIndicator = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_bar_indicator, showBarIndicator);
+        elevation = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_elevation, elevation);
+        indicatorScaleType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator_scale_type, indicatorScaleType);
+        disableTabAnimation = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_disable_animation, disableTabAnimation);
 
         typedArray.recycle();
 
@@ -160,22 +171,25 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         if (dividerResource != -1) {
             dividerDrawable = getResources().getDrawable(dividerResource);
         }
+
+        ViewCompat.setElevation(this, elevation);
     }
 
-
     @Override
-    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        final int newWidth = getMeasuredWidth();
-
+    protected void onLayout(boolean changed, int l, int t, int r, int b) {
+        super.onLayout(changed, l, t, r, b);
+        Log.d(TAG, "layout width=" + (r - l));
+        final int newWidth = r - l;
         final int childCount = tabsContainer.getChildCount();
         if (lockExpanded) {
-            int newTabWidth = Math.round(newWidth / childCount);
+            int newTabWidth = newWidth / childCount;
             if (newTabWidth == 0 || newTabWidth == tabWidth) return;
             tabWidth = newTabWidth;
+            Log.d(TAG, "newWidth=" + newWidth + " tabWidth=" + tabWidth);
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
                 View view = tabsContainer.getChildAt(i);
                 view.getLayoutParams().width = tabWidth;
+                view.requestLayout();
             }
         }
     }
@@ -183,7 +197,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     @Override
     protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) {
         final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
-        if (!hideBarIndicator)
+        if (showBarIndicator)
             switch (indicatorType) {
                 case TAB_INDICATOR_TOP:
                     lp.topMargin = indicatorBgHeight;
@@ -229,9 +243,9 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 innerView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
             }
 
-            TabView tabView = new TabView(getContext());
-            tabView.addView(innerView);
-            addTabView(tabView, i);
+//            TabView tabView = new TabView(getContext());
+//            tabView.addView(innerView);
+            addTabView(innerView, i);
         }
     }
 
@@ -253,10 +267,11 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     private void addTabView(View view, final int position) {
         tabsContainer.addView(view, new LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT));
-        view.setPadding(50, 0, 50, 0);
+        view.setPadding(tabPadding, 0, tabPadding, 0);
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "tab click " + position);
                 viewPager.setCurrentItem(position);
                 targetPosition = position;
             }
@@ -284,50 +299,65 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         notifyDatasetChanged();
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (!hideBarIndicator) {
-            bgRect.left = 0;
-            bgRect.right = tabsContainer.getRight();
 
-            View currentTab = tabsContainer.getChildAt(position);
-            indicatorRect.left = currentTab.getLeft();
-            indicatorRect.right = currentTab.getRight();
-
-            if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1) {
-                View nextTab = tabsContainer.getChildAt(position + 1);
-                indicatorRect.left = (positionOffset * nextTab.getLeft() + (1f - positionOffset) * indicatorRect.left);
-                indicatorRect.right = (positionOffset * nextTab.getRight() + (1f - positionOffset) * indicatorRect.right);
-            }
-
-            //draw slider
-            switch (indicatorType) {
-                case TAB_INDICATOR_TOP:
-                    bgRect.top = 0;
-                    bgRect.bottom = indicatorHeight;
-                    indicatorRect.top = indicatorMargin;
-                    indicatorRect.bottom = indicatorHeight + indicatorMargin;
-                    break;
-                case TAB_INDICATOR_BOTTOM:
-                default:
-                    bgRect.top = getHeight() - indicatorHeight;
-                    bgRect.bottom = getHeight();
-                    indicatorRect.top = getHeight() - indicatorHeight - indicatorMargin;
-                    indicatorRect.bottom = getHeight() - indicatorMargin;
-            }
-
-            canvas.drawRect(bgRect, bgPaing);
-            canvas.drawRect(indicatorRect, tintPaint);
-        }
-        //draw divider
-        if (!showDivider) return;
+        drawIndicator(canvas);
         drawDivider(canvas);
+    }
 
+    private void drawIndicator(Canvas canvas) {
+        if (!showBarIndicator) return;
+
+        bgRect.left = 0;
+        bgRect.right = tabsContainer.getRight();
+
+        View currentTab = tabsContainer.getChildAt(position);
+        indicatorRect.left = currentTab.getLeft();
+        indicatorRect.right = currentTab.getRight();
+
+        if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1) {
+            View nextTab = tabsContainer.getChildAt(position + 1);
+            indicatorRect.left = (int) (positionOffset * nextTab.getLeft() + (1f - positionOffset) * indicatorRect.left);
+            indicatorRect.right = (int) (positionOffset * nextTab.getRight() + (1f - positionOffset) * indicatorRect.right);
+        }
+
+        //draw slider
+        switch (indicatorType) {
+            case TAB_INDICATOR_TOP:
+                bgRect.top = 0;
+                bgRect.bottom = indicatorBgHeight;
+                indicatorRect.top = indicatorMargin;
+                indicatorRect.bottom = indicatorBgHeight + indicatorMargin;
+                break;
+            case TAB_INDICATOR_BOTTOM:
+            default:
+                bgRect.top = getHeight() - indicatorBgHeight;
+                bgRect.bottom = getHeight();
+                indicatorRect.top = getHeight() - indicatorHeight - indicatorMargin;
+                indicatorRect.bottom = getHeight() - indicatorMargin;
+        }
+
+        canvas.drawRect(bgRect, bgPaing);
+
+        if (indicatorDrawable == null)
+            canvas.drawRect(indicatorRect, tintPaint);
+        else {
+            if (indicatorScaleType == SCALE_CENTER_INSIDE) {
+                //Adjust the indicator bounds aspect ratio to keep the indicator resource intact
+                float ratio = indicatorDrawable.getIntrinsicHeight() / indicatorDrawable.getIntrinsicWidth();
+                float scaledWidth = indicatorHeight * ratio;
+                indicatorRect.left = (int) (indicatorRect.centerX() - scaledWidth / 2);
+                indicatorRect.right = (int) (indicatorRect.left + scaledWidth);
+            }
+            indicatorDrawable.setBounds(indicatorRect);
+            indicatorDrawable.draw(canvas);
+        }
     }
 
     private void drawDivider(Canvas canvas) {
+        if (!showDivider) return;
         for (int i = 0; i < tabsContainer.getChildCount() - 1; i++) {
             View tab = tabsContainer.getChildAt(i);
             int startX = tab.getRight() - dividerWidth / 2;
@@ -353,7 +383,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     //Listen View Pager events
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(TAG, "position=" + position + " positionOffset=" + positionOffset + "  pixels=" + positionOffsetPixels);
         this.position = position;
         this.positionOffset = positionOffset;
         if (targetPosition == -1)
