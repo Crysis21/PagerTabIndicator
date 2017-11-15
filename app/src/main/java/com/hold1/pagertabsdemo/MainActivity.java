@@ -12,10 +12,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.hold1.pagertabsdemo.fragments.DemoFragment;
-import com.hold1.pagertabsdemo.fragments.LayoutFragment;
+import com.hold1.pagertabsdemo.fragments.AdaptersFragment;
+import com.hold1.pagertabsdemo.fragments.ColorsFragment;
+import com.hold1.pagertabsdemo.fragments.ContactFragment;
+import com.hold1.pagertabsdemo.fragments.DividerFragment;
+import com.hold1.pagertabsdemo.fragments.IndicatorFragment;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 import com.hold1.pagertabsindicator.TabViewProvider;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private PagerAdapter viewCustomAdapter;
     private PagerAdapter viewTextAdapter;
 
+    private List<Fragment> demoFragments = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
         viewPager = findViewById(R.id.view_pager);
         tabsIndicator = findViewById(R.id.tabs_indicator);
+
+        demoFragments.add(new IndicatorFragment());
+        demoFragments.add(new DividerFragment());
+        demoFragments.add(new ColorsFragment());
+        demoFragments.add(new AdaptersFragment());
+        demoFragments.add(new ContactFragment());
 
         viewTextAdapter = new TextAdapter(getSupportFragmentManager());
         viewImageAdapter = new ImageAdapter(getSupportFragmentManager());
@@ -47,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -76,12 +91,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new LayoutFragment();
+            return demoFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return demoFragments.size();
         }
 
         @Override
@@ -108,12 +123,12 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new DemoFragment();
+            return demoFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return demoFragments.size();
         }
 
         @Override
@@ -121,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
             return "Tab " + position;
         }
     }
-
 
 
     class CustomAdapter extends FragmentPagerAdapter{
@@ -132,17 +146,22 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            return new DemoFragment();
+            return demoFragments.get(position);
         }
 
         @Override
         public int getCount() {
-            return 5;
+            return demoFragments.size();
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
             return "Tab " + position;
         }
+    }
+
+    //Just for easing the demo :)
+    public PagerTabsIndicator getTabsIndicator() {
+        return tabsIndicator;
     }
 }

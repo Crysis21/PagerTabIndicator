@@ -242,8 +242,10 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 } else if (imageProvider.getImageResourceId(position) != 0) {
                     ((ImageView) innerView).setImageResource(imageProvider.getImageResourceId(position));
                 }
+                innerView = new TabView(getContext(), innerView);
             } else {
                 innerView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
+                innerView = new TabView(getContext(), innerView);
             }
 
             addTabView(innerView, i);
@@ -257,13 +259,13 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         textView.setSingleLine();
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setTextColor(textColor);
-        return new TabView(getContext(), textView);
+        return textView;
     }
 
     private View createImageView() {
         ImageView imageView = new ImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        return new TabView(getContext(), imageView);
+        return imageView;
     }
 
     private void addTabView(View view, final int position) {
