@@ -243,8 +243,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 innerView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
             }
 
-//            TabView tabView = new TabView(getContext());
-//            tabView.addView(innerView);
             addTabView(innerView, i);
         }
     }
@@ -256,13 +254,13 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         textView.setSingleLine();
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setTextColor(textColor);
-        return textView;
+        return new TabView(getContext(), textView);
     }
 
     private View createImageView() {
         ImageView imageView = new ImageView(getContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        return imageView;
+        return new TabView(getContext(), imageView);
     }
 
     private void addTabView(View view, final int position) {
@@ -302,7 +300,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         drawIndicator(canvas);
         drawDivider(canvas);
     }
@@ -314,10 +311,14 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         bgRect.right = tabsContainer.getRight();
 
         View currentTab = tabsContainer.getChildAt(position);
+        if (disableTabAnimation) {
+            currentTab = tabsContainer.getChildAt(Math.round(position + positionOffset));
+        }
+
         indicatorRect.left = currentTab.getLeft();
         indicatorRect.right = currentTab.getRight();
 
-        if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1) {
+        if (positionOffset > 0f && position < viewPager.getAdapter().getCount() - 1 && !disableTabAnimation) {
             View nextTab = tabsContainer.getChildAt(position + 1);
             indicatorRect.left = (int) (positionOffset * nextTab.getLeft() + (1f - positionOffset) * indicatorRect.left);
             indicatorRect.right = (int) (positionOffset * nextTab.getRight() + (1f - positionOffset) * indicatorRect.right);
@@ -383,10 +384,22 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     //Listen View Pager events
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        Log.d(TAG, "position=" + position + " offset=" + positionOffset);
         this.position = position;
         this.positionOffset = positionOffset;
         if (targetPosition == -1)
             scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+        int targetPosition = Math.round(position + positionOffset);
+        float targetOffset = (float) Math.abs(0.5 - positionOffset) * 2;
+        for (int i = 0; i < tabsContainer.getChildCount(); i++) {
+            View child = tabsContainer.getChildAt(i);
+            if (!(child instanceof TabView)) continue;
+            if (i == targetPosition) {
+                ((TabView) child).onOffset(targetOffset);
+            } else {
+                ((TabView) child).onOffset(0);
+            }
+        }
         invalidate();
     }
 

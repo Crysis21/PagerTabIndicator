@@ -3,8 +3,10 @@ package com.hold1.pagertabsindicator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
 /**
@@ -17,39 +19,34 @@ public class TabView extends FrameLayout {
     private ValueAnimator bgAnimator;
     private int pressColor = Color.TRANSPARENT;
     private int currentBgColor = pressColor;
+    private float offset = 0;
 
     public TabView(Context context) {
         super(context);
-        bgAnimator = ValueAnimator.ofInt(100, 0);
-        bgAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                setBackgroundColor(Color.argb((Integer) animation.getAnimatedValue(), Color.red(pressColor), Color.green(pressColor), Color.blue(pressColor)));
-            }
-        });
+        setWillNotDraw(false);
     }
 
-    @Override
-    public void setSelected(boolean selected) {
+
+    public TabView(Context context, View child) {
+        this(context);
+        addView(child);
+    }
+
+    public TabView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        setWillNotDraw(false);
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                bgAnimator.cancel();
-                setBackgroundColor(pressColor);
-                break;
-            case MotionEvent.ACTION_UP:
-                if (bgAnimator != null)
-                    bgAnimator.start();
-                break;
-        }
-        return super.onTouchEvent(event);
+    public TabView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        setWillNotDraw(false);
+
     }
 
     public void onOffset(float offset) {
-        Log.d(TAG, "onOffset=" + offset);
+        this.offset=offset;
+        invalidate();
     }
+
 }

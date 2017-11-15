@@ -16,7 +16,7 @@ For a test drive you can try the PlayStore demo app
 Add the following line in your build.gradle file
 
 ```gradle
-compile 'com.hold1:pagertabindicator:1.0.0'
+compile 'com.hold1:pagertabindicator:1.0.2'
 ```
 
 Inside your layout insert a PagerTabIndicator element
@@ -65,4 +65,4 @@ In your java code you should create a PagerAdapter for your ViewPager. After ini
 * `tab_divider_resource` - used to specify a drawable resource that should be used to be drawn as a divider
 * `tab_show_bar_indicator` - param to show/hide the indicator bar. default set tot true
 * `tab_elevation` - set elevation to the tab bar. In case of bottom bar placement, you should use a higher value to make the shadow more visible.
-* `tab_disable_animation` - WIP: disable indicator animation while switching tabs
+* `tab_disable_animation` - disable indicator animation while switching tabs

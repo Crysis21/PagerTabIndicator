@@ -21,13 +21,13 @@
         android:id="@+id/tabs_indicator"
         android:layout_width="0dp"
         android:layout_height="64dp"
-        android:background="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:tab_elevation="20dp"
+        android:background="#ffffff"
         app:tab_indicator="bottom_bar"
         app:tab_indicator_scale_type="centerInside"
-        app:tab_disable_animation="true"
         app:tab_lock_expanded="true" />
 
 </android.support.constraint.ConstraintLayout>
