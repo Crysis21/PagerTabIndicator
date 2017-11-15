@@ -98,12 +98,6 @@ public class MainActivity extends AppCompatActivity {
         public int getImageResourceId(int position) {
             return R.drawable.ic_add_shopping_cart_black_24dp;
         }
-
-//        @Override
-//        public Uri getImageUri(int position) {
-//            Uri uri = Uri.parse("https://image.flaticon.com/teams/slug/freepik.jpg");
-//            return uri;
-//        }
     }
 
     class TextAdapter extends FragmentPagerAdapter{

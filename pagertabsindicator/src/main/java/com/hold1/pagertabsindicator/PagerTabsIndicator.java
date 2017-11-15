@@ -71,7 +71,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private boolean showDivider = true;
     private int dividerWidth = 2;
     private int dividerMargin = 10;
-    private int elevation = 6;
+    private int tabElevation = 6;
     private int dividerColor = Color.BLACK;
     // Use this if you want a custom resource drawn in tab divider
     private int dividerResource = -1;
@@ -144,12 +144,15 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         dividerColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_divider_color, dividerColor);
         dividerResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_divider_resource, dividerResource);
         showBarIndicator = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_bar_indicator, showBarIndicator);
-        elevation = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_elevation, elevation);
+        tabElevation = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_elevation, tabElevation);
         indicatorScaleType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator_scale_type, indicatorScaleType);
         disableTabAnimation = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_disable_animation, disableTabAnimation);
 
         typedArray.recycle();
+        prepareResources();
+    }
 
+    private void prepareResources(){
         bgPaing = new Paint();
         bgPaing.setColor(indicatorBgColor);
         bgPaing.setStyle(Paint.Style.FILL);
@@ -172,7 +175,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             dividerDrawable = getResources().getDrawable(dividerResource);
         }
 
-        ViewCompat.setElevation(this, elevation);
+        ViewCompat.setElevation(this, tabElevation);
     }
 
     @Override
@@ -454,5 +457,166 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             lastScrollX = newScrollX;
             scrollTo(newScrollX, 0);
         }
+    }
+
+
+    //Getters and setters that should behave like a builder pattern
+
+    public int getTextSize() {
+        return textSize;
+    }
+
+    public PagerTabsIndicator setTextSize(int textSize) {
+        this.textSize = textSize;
+        return this;
+    }
+
+    public int getIndicatorType() {
+        return indicatorType;
+    }
+
+    public PagerTabsIndicator setIndicatorType(int indicatorType) {
+        this.indicatorType = indicatorType;
+        return this;
+    }
+
+    public int getIndicatorHeight() {
+        return indicatorHeight;
+    }
+
+    public PagerTabsIndicator setIndicatorHeight(int indicatorHeight) {
+        this.indicatorHeight = indicatorHeight;
+        return this;
+    }
+
+    public int getIndicatorBgHeight() {
+        return indicatorBgHeight;
+    }
+
+    public PagerTabsIndicator setIndicatorBgHeight(int indicatorBgHeight) {
+        this.indicatorBgHeight = indicatorBgHeight;
+        return this;
+    }
+
+    public int getIndicatorMargin() {
+        return indicatorMargin;
+    }
+
+    public PagerTabsIndicator setIndicatorMargin(int indicatorMargin) {
+        this.indicatorMargin = indicatorMargin;
+        return this;
+    }
+
+    public int getIndicatorColor() {
+        return indicatorColor;
+    }
+
+    public PagerTabsIndicator setIndicatorColor(int indicatorColor) {
+        this.indicatorColor = indicatorColor;
+        return this;
+    }
+
+    public int getIndicatorBgColor() {
+        return indicatorBgColor;
+    }
+
+    public PagerTabsIndicator setIndicatorBgColor(int indicatorBgColor) {
+        this.indicatorBgColor = indicatorBgColor;
+        return this;
+    }
+
+    public boolean isShowDivider() {
+        return showDivider;
+    }
+
+    public PagerTabsIndicator setShowDivider(boolean showDivider) {
+        this.showDivider = showDivider;
+        return this;
+    }
+
+    public int getDividerWidth() {
+        return dividerWidth;
+    }
+
+    public PagerTabsIndicator setDividerWidth(int dividerWidth) {
+        this.dividerWidth = dividerWidth;
+        return this;
+    }
+
+    public int getDividerMargin() {
+        return dividerMargin;
+    }
+
+    public PagerTabsIndicator setDividerMargin(int dividerMargin) {
+        this.dividerMargin = dividerMargin;
+        return this;
+    }
+
+    public int getTabElevation() {
+        return tabElevation;
+    }
+
+    public PagerTabsIndicator setTabElevation(int tabElevation) {
+        this.tabElevation = tabElevation;
+        return this;
+    }
+
+    public int getDividerColor() {
+        return dividerColor;
+    }
+
+    public PagerTabsIndicator setDividerColor(int dividerColor) {
+        this.dividerColor = dividerColor;
+        return this;
+    }
+
+    public int getTextColor() {
+        return textColor;
+    }
+
+    public PagerTabsIndicator setTextColor(int textColor) {
+        this.textColor = textColor;
+        return this;
+    }
+
+    public int getTabPadding() {
+        return tabPadding;
+    }
+
+    public PagerTabsIndicator setTabPadding(int tabPadding) {
+        this.tabPadding = tabPadding;
+        return this;
+    }
+
+    public boolean isLockExpanded() {
+        return lockExpanded;
+    }
+
+    public PagerTabsIndicator setLockExpanded(boolean lockExpanded) {
+        this.lockExpanded = lockExpanded;
+        return this;
+    }
+
+    public boolean isShowBarIndicator() {
+        return showBarIndicator;
+    }
+
+    public PagerTabsIndicator setShowBarIndicator(boolean showBarIndicator) {
+        this.showBarIndicator = showBarIndicator;
+        return this;
+    }
+
+    public boolean isDisableTabAnimation() {
+        return disableTabAnimation;
+    }
+
+    public PagerTabsIndicator setDisableTabAnimation(boolean disableTabAnimation) {
+        this.disableTabAnimation = disableTabAnimation;
+        return this;
+    }
+
+    public void refresh(){
+        prepareResources();
+        notifyDatasetChanged();
     }
 }
