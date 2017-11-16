@@ -35,12 +35,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     //CONSTANTS
     private static final String TAG = PagerTabsIndicator.class.getSimpleName();
-    private static final int TAB_INDICATOR_TOP = 0;
-    private static final int TAB_INDICATOR_BOTTOM = 1;
-    private static final int TAB_INDICATOR_BACKGROUND = 2;
+    public static final int TAB_INDICATOR_TOP = 0;
+    public static final int TAB_INDICATOR_BOTTOM = 1;
+    public static final int TAB_INDICATOR_BACKGROUND = 2;
 
-    private static final int SCALE_FIT_XY = 0;
-    private static final int SCALE_CENTER_INSIDE = 1;
+    public static final int SCALE_FIT_XY = 0;
+    public static final int SCALE_CENTER_INSIDE = 1;
 
     private LinearLayout tabsContainer;
     private ViewPager viewPager;
@@ -204,9 +204,11 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             switch (indicatorType) {
                 case TAB_INDICATOR_TOP:
                     lp.topMargin = indicatorBgHeight;
+                    lp.bottomMargin = 0;
                     break;
                 case TAB_INDICATOR_BOTTOM:
                     lp.bottomMargin = indicatorBgHeight;
+                    lp.topMargin = 0;
                     break;
             }
 
@@ -336,7 +338,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 bgRect.top = 0;
                 bgRect.bottom = indicatorBgHeight;
                 indicatorRect.top = indicatorMargin;
-                indicatorRect.bottom = indicatorBgHeight + indicatorMargin;
+                indicatorRect.bottom = indicatorHeight + indicatorMargin;
                 break;
             case TAB_INDICATOR_BOTTOM:
             default:
@@ -619,6 +621,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     }
 
     public void refresh(){
+        tabWidth = LayoutParams.WRAP_CONTENT;
         prepareResources();
         notifyDatasetChanged();
     }

@@ -24,7 +24,7 @@ public class ColorsFragment extends Fragment implements FragmentPresenter{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.demo_fragment, null);
+        View view = inflater.inflate(R.layout.colors_fragment, null);
         return view;
     }
 

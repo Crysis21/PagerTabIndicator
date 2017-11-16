@@ -18,9 +18,10 @@ import android.widget.TextView;
 import com.hold1.pagertabsdemo.fragments.AdaptersFragment;
 import com.hold1.pagertabsdemo.fragments.ColorsFragment;
 import com.hold1.pagertabsdemo.fragments.ContactFragment;
+import com.hold1.pagertabsdemo.fragments.DemoFragment;
 import com.hold1.pagertabsdemo.fragments.DividerFragment;
 import com.hold1.pagertabsdemo.fragments.FragmentPresenter;
-import com.hold1.pagertabsdemo.fragments.IndicatorFragment;
+import com.hold1.pagertabsdemo.fragments.TabsFragment;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 import com.hold1.pagertabsindicator.TabViewProvider;
 
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.view_pager);
         tabsIndicator = findViewById(R.id.tabs_indicator);
 
-        demoFragments.add(new IndicatorFragment());
+        demoFragments.add(new TabsFragment());
         demoFragments.add(new DividerFragment());
         demoFragments.add(new ColorsFragment());
         demoFragments.add(new AdaptersFragment());
@@ -184,5 +185,10 @@ public class MainActivity extends AppCompatActivity {
     //Just for easing the demo :)
     public PagerTabsIndicator getTabsIndicator() {
         return tabsIndicator;
+    }
+
+    public void addDummyTab(){
+        demoFragments.add(new DemoFragment());
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 }
