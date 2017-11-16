@@ -239,8 +239,8 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 innerView = createImageView();
                 if (imageProvider.getImageUri(i) != null) {
                     Glide.with(getContext()).load(imageProvider.getImageUri(i)).into((ImageView) innerView);
-                } else if (imageProvider.getImageResourceId(position) != 0) {
-                    ((ImageView) innerView).setImageResource(imageProvider.getImageResourceId(position));
+                } else if (imageProvider.getImageResourceId(i) != 0) {
+                    ((ImageView) innerView).setImageResource(imageProvider.getImageResourceId(i));
                 }
                 innerView = new TabView(getContext(), innerView);
             } else {
@@ -264,6 +264,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     private View createImageView() {
         ImageView imageView = new ImageView(getContext());
+        imageView.setPadding(10,10,10,10);
         imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
         return imageView;
     }

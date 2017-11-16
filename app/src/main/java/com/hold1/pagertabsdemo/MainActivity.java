@@ -11,11 +11,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.hold1.pagertabsdemo.fragments.AdaptersFragment;
 import com.hold1.pagertabsdemo.fragments.ColorsFragment;
 import com.hold1.pagertabsdemo.fragments.ContactFragment;
 import com.hold1.pagertabsdemo.fragments.DividerFragment;
+import com.hold1.pagertabsdemo.fragments.FragmentPresenter;
 import com.hold1.pagertabsdemo.fragments.IndicatorFragment;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 import com.hold1.pagertabsindicator.TabViewProvider;
@@ -111,6 +115,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public int getImageResourceId(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter){
+                return ((FragmentPresenter) fragment).getTabImage();
+            }
             return R.drawable.ic_add_shopping_cart_black_24dp;
         }
     }
@@ -133,12 +141,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter){
+                return ((FragmentPresenter) fragment).getTabName();
+            }
             return "Tab " + position;
         }
     }
 
 
-    class CustomAdapter extends FragmentPagerAdapter{
+    class CustomAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView{
 
         public CustomAdapter(FragmentManager fm) {
             super(fm);
@@ -155,8 +167,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public CharSequence getPageTitle(int position) {
-            return "Tab " + position;
+        public View getView(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter){
+                View view = getLayoutInflater().inflate(R.layout.tab_item, null);
+                TextView title = view.findViewById(R.id.tab_name);
+                title.setText(((FragmentPresenter) fragment).getTabName());
+                ImageView icon = view.findViewById(R.id.tab_icon);
+                icon.setImageResource(((FragmentPresenter) fragment).getTabImage());
+                return view;
+            }
+            return null;
         }
     }
 

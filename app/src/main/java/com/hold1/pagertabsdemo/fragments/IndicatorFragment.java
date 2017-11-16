@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
  * Created by Cristian Holdunu on 09/11/2017.
  */
 
-public class IndicatorFragment extends Fragment {
+public class IndicatorFragment extends Fragment implements FragmentPresenter{
 
     PagerTabsIndicator tabsIndicator;
 
@@ -97,5 +97,15 @@ public class IndicatorFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    public String getTabName() {
+        return "Indicator";
+    }
+
+    @Override
+    public int getTabImage() {
+        return R.drawable.ic_indicator;
     }
 }

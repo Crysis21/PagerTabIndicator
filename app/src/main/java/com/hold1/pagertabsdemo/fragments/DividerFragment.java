@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by Cristian Holdunu on 08/11/2017.
  */
 
-public class DividerFragment extends Fragment {
+public class DividerFragment extends Fragment implements FragmentPresenter{
 
 
     private PagerTabsIndicator tabsIndicator;
@@ -35,5 +35,15 @@ public class DividerFragment extends Fragment {
         tabsIndicator = ((MainActivity)getActivity()).getTabsIndicator();
         if (tabsIndicator==null) return;
         ButterKnife.bind(this, view);
+    }
+
+    @Override
+    public String getTabName() {
+        return "Divider";
+    }
+
+    @Override
+    public int getTabImage() {
+        return R.drawable.ic_divider;
     }
 }
