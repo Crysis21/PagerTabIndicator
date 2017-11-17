@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
 import com.hold1.pagertabsdemo.MainActivity;
@@ -93,10 +94,37 @@ public class DividerFragment extends Fragment implements FragmentPresenter{
             }
         });
 
+        showDivider.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tabsIndicator.setShowDivider(isChecked).refresh();
+            }
+        });
+        solidColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tabsIndicator.setDividerResource(-1).setDividerWidth(1).refresh();
+            }
+        });
+
         divider1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tabsIndicator.setDividerResource(R.drawable.ic_divider1).setDividerWidth(20).setDividerMargin(40).refresh();
+            }
+        });
 
+        divider2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tabsIndicator.setDividerResource(R.drawable.ic_divider2).setDividerWidth(18).setDividerMargin(30).refresh();
+            }
+        });
+
+        divider3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tabsIndicator.setDividerResource(R.drawable.ic_divider3).setDividerWidth(40).setDividerMargin(36).refresh();
             }
         });
 
@@ -110,5 +138,10 @@ public class DividerFragment extends Fragment implements FragmentPresenter{
     @Override
     public int getTabImage() {
         return R.drawable.ic_divider;
+    }
+
+    @Override
+    public String getTabImageUrl() {
+        return "https://s3-us-west-2.amazonaws.com/anaface-pictures/ic_divider.png";
     }
 }

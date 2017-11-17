@@ -14,7 +14,7 @@ import com.hold1.pagertabsdemo.R;
  * Created by Cristian Holdunu on 08/11/2017.
  */
 
-public class DemoFragment extends Fragment {
+public class DemoFragment extends Fragment implements FragmentPresenter{
 
     @Nullable
     @Override
@@ -24,5 +24,20 @@ public class DemoFragment extends Fragment {
         int color = randomColor.randomColor();
         view.setBackgroundColor(color);
         return view;
+    }
+
+    @Override
+    public String getTabName() {
+        return "Dummy";
+    }
+
+    @Override
+    public int getTabImage() {
+        return R.drawable.ic_add_shopping_cart_black_24dp;
+    }
+
+    @Override
+    public String getTabImageUrl() {
+        return null;
     }
 }

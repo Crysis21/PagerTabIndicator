@@ -7,4 +7,5 @@ package com.hold1.pagertabsdemo.fragments;
 public interface FragmentPresenter {
     String getTabName();
     int getTabImage();
+    String getTabImageUrl();
 }

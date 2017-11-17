@@ -7,34 +7,87 @@
     android:orientation="vertical">
 
 
-        <LinearLayout
-            android:layout_width="270dp"
+    <LinearLayout
+        android:layout_width="270dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <com.flask.colorpicker.ColorPickerView
+            android:id="@+id/color_picker_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="vertical">
+            app:alphaSlider="true"
+            app:alphaSliderView="@+id/v_alpha_slider"
+            app:density="12"
+            app:lightnessSlider="true"
+            app:lightnessSliderView="@+id/v_lightness_slider"
+            app:wheelType="FLOWER" />
 
-            <com.flask.colorpicker.ColorPickerView
-                android:id="@+id/color_picker_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:alphaSlider="true"
-                app:alphaSliderView="@+id/v_alpha_slider"
-                app:density="12"
-                app:lightnessSlider="true"
-                app:lightnessSliderView="@+id/v_lightness_slider"
-                app:wheelType="FLOWER" />
+        <com.flask.colorpicker.slider.LightnessSlider
+            android:id="@+id/v_lightness_slider"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
 
-            <com.flask.colorpicker.slider.LightnessSlider
-                android:id="@+id/v_lightness_slider"
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
+        <com.flask.colorpicker.slider.AlphaSlider
+            android:id="@+id/v_alpha_slider"
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
+    </LinearLayout>
 
-            <com.flask.colorpicker.slider.AlphaSlider
-                android:id="@+id/v_alpha_slider"
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
-        </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:text="Apply To:"
+        android:textSize="16dp"
+        android:textStyle="bold" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/elements"
+        app:alignItems="stretch"
+        android:layout_marginLeft="16dp"
+        app:flexWrap="wrap">
+
+        <Button
+            android:id="@+id/color_text"
+            android:layout_width="wrap_content"
+            android:textAllCaps="false"
+            android:layout_height="wrap_content"
+            android:text="Text Color" />
+
+        <Button
+            android:id="@+id/color_ind_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAllCaps="false"
+            android:text="Indicator Background" />
+
+        <Button
+            android:id="@+id/color_ind"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Indicator Color" />
+
+        <Button
+            android:id="@+id/color_div"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Divider Color" />
+
+        <Button
+            android:id="@+id/color_bg"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bar Backgroud" />
+
+    </com.google.android.flexbox.FlexboxLayout>
 
 </LinearLayout>

@@ -33,10 +33,18 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private PagerTabsIndicator tabsIndicator;
     private PagerAdapter viewImageAdapter;
+    private PagerAdapter webImageAdapter;
     private PagerAdapter viewCustomAdapter;
     private PagerAdapter viewTextAdapter;
 
     private List<Fragment> demoFragments = new ArrayList<>();
+
+    public enum TabAdapterType {
+        TEXT,
+        IMAGE,
+        WEB,
+        CUSTOM
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +62,10 @@ public class MainActivity extends AppCompatActivity {
 
         viewTextAdapter = new TextAdapter(getSupportFragmentManager());
         viewImageAdapter = new ImageAdapter(getSupportFragmentManager());
+        webImageAdapter = new WebImageAdapter(getSupportFragmentManager());
         viewCustomAdapter = new CustomAdapter(getSupportFragmentManager());
 
-        viewPager.setAdapter(viewTextAdapter);
+        viewPager.setAdapter(viewCustomAdapter);
         tabsIndicator.setViewPager(viewPager);
     }
 
@@ -70,25 +79,42 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.text:
-                viewPager.removeAllViews();
-                viewPager.setAdapter(viewTextAdapter);
+                changeTabAdapter(TabAdapterType.TEXT);
                 break;
             case R.id.image:
-                viewPager.removeAllViews();
-                viewPager.setAdapter(viewImageAdapter);
+                changeTabAdapter(TabAdapterType.IMAGE);
+                break;
+            case R.id.web:
+                changeTabAdapter(TabAdapterType.WEB);
                 break;
             case R.id.custom:
-                viewPager.removeAllViews();
-                viewPager.setAdapter(viewCustomAdapter);
+                changeTabAdapter(TabAdapterType.CUSTOM);
                 break;
         }
         return true;
-
     }
 
-    class ImageAdapter extends FragmentPagerAdapter implements TabViewProvider.ImageProvider{
+    public void changeTabAdapter(TabAdapterType adapterType) {
+        viewPager.removeAllViews();
+        switch (adapterType) {
+            case TEXT:
+                viewPager.setAdapter(viewTextAdapter);
+                break;
+            case IMAGE:
+                viewPager.setAdapter(viewImageAdapter);
+                break;
+            case WEB:
+                viewPager.setAdapter(webImageAdapter);
+                break;
+            case CUSTOM:
+                viewPager.setAdapter(viewCustomAdapter);
+                break;
+        }
+    }
+
+    class ImageAdapter extends FragmentPagerAdapter implements TabViewProvider.ImageProvider {
 
         public ImageAdapter(FragmentManager fm) {
             super(fm);
@@ -117,14 +143,55 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getImageResourceId(int position) {
             Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter){
+            if (fragment instanceof FragmentPresenter) {
                 return ((FragmentPresenter) fragment).getTabImage();
             }
             return R.drawable.ic_add_shopping_cart_black_24dp;
         }
     }
 
-    class TextAdapter extends FragmentPagerAdapter{
+
+    class WebImageAdapter extends FragmentPagerAdapter implements TabViewProvider.ImageProvider {
+
+        public WebImageAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return demoFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return demoFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return "Tab " + position;
+        }
+
+        @Override
+        public Uri getImageUri(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter) {
+                return Uri.parse(((FragmentPresenter) fragment).getTabImageUrl());
+            }
+            return Uri.parse("https://icons8.github.io/flat-color-icons/svg/opened_folder.svg");
+        }
+
+        @Override
+        public int getImageResourceId(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter) {
+                return ((FragmentPresenter) fragment).getTabImage();
+            }
+            return R.drawable.ic_add_shopping_cart_black_24dp;
+        }
+    }
+
+    class TextAdapter extends FragmentPagerAdapter {
 
         public TextAdapter(FragmentManager fm) {
             super(fm);
@@ -143,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public CharSequence getPageTitle(int position) {
             Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter){
+            if (fragment instanceof FragmentPresenter) {
                 return ((FragmentPresenter) fragment).getTabName();
             }
             return "Tab " + position;
@@ -151,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    class CustomAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView{
+    class CustomAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView {
 
         public CustomAdapter(FragmentManager fm) {
             super(fm);
@@ -170,7 +237,39 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position) {
             Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter){
+            if (fragment instanceof FragmentPresenter) {
+                View view = getLayoutInflater().inflate(R.layout.tab_item, null);
+                TextView title = view.findViewById(R.id.tab_name);
+                title.setText(((FragmentPresenter) fragment).getTabName());
+                ImageView icon = view.findViewById(R.id.tab_icon);
+                icon.setImageResource(((FragmentPresenter) fragment).getTabImage());
+                return view;
+            }
+            return null;
+        }
+    }
+
+
+    class CustomAnimAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView {
+
+        public CustomAnimAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return demoFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return demoFragments.size();
+        }
+
+        @Override
+        public View getView(int position) {
+            Fragment fragment = demoFragments.get(position);
+            if (fragment instanceof FragmentPresenter) {
                 View view = getLayoutInflater().inflate(R.layout.tab_item, null);
                 TextView title = view.findViewById(R.id.tab_name);
                 title.setText(((FragmentPresenter) fragment).getTabName());
@@ -187,7 +286,7 @@ public class MainActivity extends AppCompatActivity {
         return tabsIndicator;
     }
 
-    public void addDummyTab(){
+    public void addDummyTab() {
         demoFragments.add(new DemoFragment());
         viewPager.getAdapter().notifyDataSetChanged();
     }

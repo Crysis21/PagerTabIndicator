@@ -202,4 +202,9 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
     public int getTabImage() {
         return R.drawable.ic_tabs;
     }
+
+    @Override
+    public String getTabImageUrl() {
+        return "https://s3-us-west-2.amazonaws.com/anaface-pictures/ic_tab.png";
+    }
 }

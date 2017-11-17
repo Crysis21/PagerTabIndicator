@@ -12,6 +12,14 @@ PagerTabIndicator is a customisable android library that is designed to work wit
 
 For a test drive you can try the PlayStore demo app
 
+
+Give it a test drive with our sample app:
+
+https://play.google.com/store/apps/details?id=com.hold1.pagertabsdemo
+
+![Screenshot 1](https://s3-us-west-2.amazonaws.com/anaface-pictures/ss_1.png)![Screenshot 2](https://s3-us-west-2.amazonaws.com/anaface-pictures/ss_2.png)
+
+
 #### Installation
 Add the following line in your build.gradle file
 

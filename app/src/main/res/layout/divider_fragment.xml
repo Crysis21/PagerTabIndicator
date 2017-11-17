@@ -119,37 +119,29 @@
                     <Button
                         android:id="@+id/solid_color"
                         android:text="Solid Color"
-                        android:gravity="left|left|center_vertical"
                         android:drawableLeft="@drawable/solid_color"
-                        android:drawablePadding="10dp"
-                        android:layout_width="match_parent"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content" />
 
                     <Button
                         android:id="@+id/divider_1"
                         android:text="Custom Shape 1"
-                        android:gravity="left|left|center_vertical"
-                        android:drawableLeft="@drawable/ic_adapter"
-                        android:drawablePadding="10dp"
-                        android:layout_width="match_parent"
+                        android:drawableLeft="@drawable/ic_divider1"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content" />
 
                     <Button
                         android:id="@+id/divider_2"
-                        android:text="Custom Shape 1"
-                        android:gravity="left|left|center_vertical"
-                        android:drawableLeft="@drawable/ic_adapter"
-                        android:drawablePadding="10dp"
-                        android:layout_width="match_parent"
+                        android:text="Custom Shape 2"
+                        android:drawableLeft="@drawable/ic_divider2"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content" />
 
                     <Button
                         android:id="@+id/divider_3"
-                        android:text="Custom Shape 1"
-                        android:gravity="left|left|center_vertical"
-                        android:drawableLeft="@drawable/ic_adapter"
-                        android:drawablePadding="10dp"
-                        android:layout_width="match_parent"
+                        android:text="Custom Shape 3"
+                        android:drawableLeft="@drawable/ic_divider3"
+                        android:layout_width="200dp"
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>

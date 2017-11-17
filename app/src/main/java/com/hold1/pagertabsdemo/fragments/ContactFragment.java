@@ -1,16 +1,22 @@
 package com.hold1.pagertabsdemo.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.hold1.pagertabsdemo.MainActivity;
 import com.hold1.pagertabsdemo.R;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 
+import br.tiagohm.markdownview.MarkdownView;
+import br.tiagohm.markdownview.css.styles.Github;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -21,10 +27,16 @@ public class ContactFragment extends Fragment implements FragmentPresenter{
 
     private PagerTabsIndicator tabsIndicator;
 
+    @BindView(R.id.markdown_view)
+    MarkdownView markdownView;
+
+    @BindView(R.id.open_git)
+    Button github;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.demo_fragment, null);
+        View view = inflater.inflate(R.layout.contact_fragment, null);
         return view;
     }
 
@@ -34,6 +46,16 @@ public class ContactFragment extends Fragment implements FragmentPresenter{
         tabsIndicator = ((MainActivity)getActivity()).getTabsIndicator();
         if (tabsIndicator==null) return;
         ButterKnife.bind(this, view);
+        markdownView.addStyleSheet(new Github());
+        markdownView.loadMarkdownFromUrl("https://raw.githubusercontent.com/Crysis21/PagerTabIndicator/master/Readme.md");
+        github.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://github.com/Crysis21/PagerTabIndicator"));
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -44,5 +66,10 @@ public class ContactFragment extends Fragment implements FragmentPresenter{
     @Override
     public int getTabImage() {
         return R.drawable.ic_contact;
+    }
+
+    @Override
+    public String getTabImageUrl() {
+        return "https://s3-us-west-2.amazonaws.com/anaface-pictures/ic_contact.png";
     }
 }

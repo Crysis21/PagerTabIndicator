@@ -25,7 +25,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Tab Layout"
+                    android:text="Standard Pager Adapter"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -46,40 +46,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Text Size" />
+                        android:text="It will display the of the getPageTitle() method of the standard PagerAdapter class. TextView attributes can be edited using PagerTabIndicator attributes." />
 
-                    <SeekBar
-                        android:id="@+id/text_size"
-                        style="@style/Seekbar"
+                    <ImageView
+                        android:id="@+id/tabs_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:max="80"
-                        android:progress="16" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Padding" />
-
-                    <SeekBar
-                        android:id="@+id/tab_padding"
-                        style="@style/Seekbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="6" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tab bar elevation" />
-
-                    <SeekBar
-                        android:id="@+id/tab_elevation"
-                        style="@style/Seekbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="6" />
+                        android:layout_marginTop="4dp"
+                        android:adjustViewBounds="true"
+                        android:elevation="2dp"
+                        android:src="@drawable/tabs_text" />
 
                 </LinearLayout>
 
@@ -88,7 +64,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="4dp">
@@ -102,7 +78,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Indicator Size"
+                    android:text="TabViewProvider.ImageProvider"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -123,43 +99,32 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Height" />
+                        android:text="Provide resource id's for tab views" />
 
-                    <SeekBar
-                        android:id="@+id/indicator_height"
-                        style="@style/Seekbar"
+
+                    <ImageView
+                        android:id="@+id/tabs_image"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="16" />
+                        android:layout_marginTop="4dp"
+                        android:adjustViewBounds="true"
+                        android:elevation="2dp"
+                        android:src="@drawable/tab_image" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Background Height" />
+                        android:layout_marginTop="10dp"
+                        android:text="You can also give image URL's" />
 
-                    <SeekBar
-                        android:id="@+id/indicator_bg_height"
-                        style="@style/Seekbar"
+                    <ImageView
+                        android:id="@+id/tabs_web"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="16" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Margin" />
-
-                    <SeekBar
-                        android:id="@+id/indicator_margin"
-                        style="@style/Seekbar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:max="50"
-                        android:progress="0" />
+                        android:layout_marginTop="4dp"
+                        android:adjustViewBounds="true"
+                        android:elevation="2dp"
+                        android:src="@drawable/tabs_web" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -167,7 +132,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_margin="10dp"
             app:cardCornerRadius="2dp"
             app:cardElevation="4dp">
@@ -181,7 +146,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Indicator Style"
+                    android:text="TabViewProvider.CustomView"
                     android:textSize="16dp"
                     android:textStyle="bold" />
 
@@ -199,45 +164,32 @@
                     android:layout_marginTop="12dp"
                     android:orientation="vertical">
 
-                    <CheckBox
-                        android:id="@+id/lock_expanded"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Lock tabs expanded" />
-
-                    <Button
-                        android:id="@+id/add_dummy"
-                        android:text="add dummy tab"
-                        android:paddingLeft="32dp"
-                        android:paddingRight="32dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="Indicator Type" />
+                        android:text="Create entirely custom views" />
 
-                    <RadioGroup
-                        android:id="@+id/indicator_type"
+
+                    <ImageView
+                        android:id="@+id/tabs_custom"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:adjustViewBounds="true"
+                        android:elevation="2dp"
+                        android:src="@drawable/tabs_custom" />
 
-                        <RadioButton
-                            android:id="@+id/bar_top"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Top bar indicator" />
+                    <!--<TextView-->
+                    <!--android:layout_marginTop="10dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="Respond to events" />-->
 
-                        <RadioButton
-                            android:id="@+id/bar_bottom"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:text="Bottom bar indicator" />
-                    </RadioGroup>
-
+                    <!--<ImageView-->
+                    <!--android:background="#ff00ff"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="54dp" />-->
                 </LinearLayout>
 
             </LinearLayout>

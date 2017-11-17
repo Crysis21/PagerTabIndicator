@@ -9,6 +9,9 @@
         android:id="@+id/image"
         android:title="Image" />
     <item
+        android:id="@+id/web"
+        android:title="Web Image" />
+    <item
         android:id="@+id/custom"
         android:title="Custom" />
 </menu>

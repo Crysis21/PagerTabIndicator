@@ -152,7 +152,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         prepareResources();
     }
 
-    private void prepareResources(){
+    private void prepareResources() {
         bgPaing = new Paint();
         bgPaing.setColor(indicatorBgColor);
         bgPaing.setStyle(Paint.Style.FILL);
@@ -266,8 +266,9 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     private View createImageView() {
         ImageView imageView = new ImageView(getContext());
-        imageView.setPadding(10,10,10,10);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setPadding(tabPadding, tabPadding, tabPadding, tabPadding);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        imageView.setAdjustViewBounds(true);
         return imageView;
     }
 
@@ -620,7 +621,22 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         return this;
     }
 
-    public void refresh(){
+    public PagerTabsIndicator setDividerResource(int dividerResource) {
+        if (dividerResource == -1) {
+            dividerDrawable = null;
+        }
+        this.dividerResource = dividerResource;
+        return this;
+    }
+
+    public PagerTabsIndicator setIndicatorResource(int indicatorResource) {
+        this.indicatorResource = indicatorResource;
+        if (indicatorResource == -1)
+            indicatorDrawable = null;
+        return this;
+    }
+
+    public void refresh() {
         tabWidth = LayoutParams.WRAP_CONTENT;
         prepareResources();
         notifyDatasetChanged();
