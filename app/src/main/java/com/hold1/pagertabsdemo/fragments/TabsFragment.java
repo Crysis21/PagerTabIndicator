@@ -55,6 +55,9 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
     @BindView(R.id.add_dummy)
     Button addDummy;
 
+    @BindView(R.id.show_bar_indicator)
+    CheckBox showBarIndicator;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -187,10 +190,16 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         addDummy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).addDummyTab();
+                ((MainActivity) getActivity()).addDummyTab();
             }
         });
 
+        showBarIndicator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tabsIndicator.setShowBarIndicator(isChecked).refresh();
+            }
+        });
     }
 
     @Override

@@ -14,4 +14,7 @@
     <item
         android:id="@+id/custom"
         android:title="Custom" />
+    <item
+        android:id="@+id/custom_anim"
+        android:title="Custom Anim" />
 </menu>

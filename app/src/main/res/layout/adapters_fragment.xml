@@ -179,17 +179,19 @@
                         android:elevation="2dp"
                         android:src="@drawable/tabs_custom" />
 
-                    <!--<TextView-->
-                    <!--android:layout_marginTop="10dp"-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="Respond to events" />-->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Respond to events" />
 
-                    <!--<ImageView-->
-                    <!--android:background="#ff00ff"-->
-                    <!--android:layout_marginTop="4dp"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="54dp" />-->
+                    <ImageView
+                        android:id="@+id/tabs_custom_anim"
+                        android:layout_width="match_parent"
+                        android:layout_height="54dp"
+                        android:layout_marginTop="4dp"
+                        android:src="@drawable/tabs_custom_anim"
+                         />
                 </LinearLayout>
 
             </LinearLayout>

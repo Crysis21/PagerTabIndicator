@@ -22,7 +22,7 @@
     <com.hold1.pagertabsindicator.PagerTabsIndicator
         android:id="@+id/tabs_indicator"
         android:layout_width="0dp"
-        android:layout_height="64dp"
+        android:layout_height="@dimen/tab_height"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -211,6 +211,11 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                     lp.topMargin = 0;
                     break;
             }
+        else {
+            lp.topMargin = getPaddingTop();
+            lp.bottomMargin = getPaddingBottom();
+        }
+
 
         super.measureChildWithMargins(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
@@ -640,5 +645,11 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         tabWidth = LayoutParams.WRAP_CONTENT;
         prepareResources();
         notifyDatasetChanged();
+    }
+
+    public PagerTabsIndicator setHeight(int height){
+        getLayoutParams().height = height;
+        requestLayout();
+        return this;
     }
 }

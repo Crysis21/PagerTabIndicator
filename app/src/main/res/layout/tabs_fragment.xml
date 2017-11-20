@@ -238,6 +238,13 @@
                             android:text="Bottom bar indicator" />
                     </RadioGroup>
 
+                    <CheckBox
+                        android:text="Show bar indicator"
+                        android:checked="true"
+                        android:id="@+id/show_bar_indicator"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
                 </LinearLayout>
 
             </LinearLayout>

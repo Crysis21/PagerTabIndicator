@@ -34,6 +34,9 @@ public class AdaptersFragment extends Fragment implements FragmentPresenter {
     @BindView(R.id.tabs_custom)
     View tabsCustom;
 
+    @BindView(R.id.tabs_custom_anim)
+    View tabsCustomAnim;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -69,6 +72,12 @@ public class AdaptersFragment extends Fragment implements FragmentPresenter {
             @Override
             public void onClick(View v) {
                 ((MainActivity) getActivity()).changeTabAdapter(MainActivity.TabAdapterType.CUSTOM);
+            }
+        });
+        tabsCustomAnim.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).changeTabAdapter(MainActivity.TabAdapterType.CUSTOM_ANIM);
             }
         });
     }

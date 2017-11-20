@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private PagerAdapter viewImageAdapter;
     private PagerAdapter webImageAdapter;
     private PagerAdapter viewCustomAdapter;
+    private PagerAdapter viewCustomAnimAdapter;
     private PagerAdapter viewTextAdapter;
 
     private List<Fragment> demoFragments = new ArrayList<>();
@@ -43,7 +44,8 @@ public class MainActivity extends AppCompatActivity {
         TEXT,
         IMAGE,
         WEB,
-        CUSTOM
+        CUSTOM,
+        CUSTOM_ANIM
     }
 
     @Override
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         viewImageAdapter = new ImageAdapter(getSupportFragmentManager());
         webImageAdapter = new WebImageAdapter(getSupportFragmentManager());
         viewCustomAdapter = new CustomAdapter(getSupportFragmentManager());
+        viewCustomAnimAdapter = new CustomAnimAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(viewCustomAdapter);
         tabsIndicator.setViewPager(viewPager);
@@ -92,6 +95,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.custom:
                 changeTabAdapter(TabAdapterType.CUSTOM);
                 break;
+            case R.id.custom_anim:
+                changeTabAdapter(TabAdapterType.CUSTOM_ANIM);
+                break;
         }
         return true;
     }
@@ -110,6 +116,14 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CUSTOM:
                 viewPager.setAdapter(viewCustomAdapter);
+                break;
+            case CUSTOM_ANIM:
+                viewPager.setAdapter(viewCustomAnimAdapter);
+                tabsIndicator.setShowDivider(false)
+                        .setIndicatorBgHeight(0)
+                        .setShowBarIndicator(false)
+                        .setHeight(getResources().getDimensionPixelSize(R.dimen.tab_height_min))
+                        .refresh();
                 break;
         }
     }
@@ -270,12 +284,7 @@ public class MainActivity extends AppCompatActivity {
         public View getView(int position) {
             Fragment fragment = demoFragments.get(position);
             if (fragment instanceof FragmentPresenter) {
-                View view = getLayoutInflater().inflate(R.layout.tab_item, null);
-                TextView title = view.findViewById(R.id.tab_name);
-                title.setText(((FragmentPresenter) fragment).getTabName());
-                ImageView icon = view.findViewById(R.id.tab_icon);
-                icon.setImageResource(((FragmentPresenter) fragment).getTabImage());
-                return view;
+                return new TabItemView(getApplicationContext(), ((FragmentPresenter) fragment).getTabName(), ((FragmentPresenter) fragment).getTabImage(), 0xFF363636, 0xFFFF0000);
             }
             return null;
         }
