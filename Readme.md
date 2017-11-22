@@ -24,7 +24,7 @@ https://play.google.com/store/apps/details?id=com.hold1.pagertabsdemo
 Add the following line in your build.gradle file
 
 ```gradle
-compile 'com.hold1:pagertabindicator:1.0.2'
+compile 'com.hold1:pagertabindicator:1.0.5'
 ```
 
 Inside your layout insert a PagerTabIndicator element

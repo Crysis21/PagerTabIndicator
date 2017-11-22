@@ -184,7 +184,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         Log.d(TAG, "layout width=" + (r - l));
         final int newWidth = r - l;
         final int childCount = tabsContainer.getChildCount();
-        if (lockExpanded) {
+        if (lockExpanded && childCount > 0) {
             int newTabWidth = newWidth / childCount;
             if (newTabWidth == 0 || newTabWidth == tabWidth) return;
             tabWidth = newTabWidth;
@@ -647,7 +647,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         notifyDatasetChanged();
     }
 
-    public PagerTabsIndicator setHeight(int height){
+    public PagerTabsIndicator setHeight(int height) {
         getLayoutParams().height = height;
         requestLayout();
         return this;

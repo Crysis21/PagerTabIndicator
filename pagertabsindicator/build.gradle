@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 group = 'com.hold1'
 project.archivesBaseName = 'pagertabindicator'
-version = '1.0.4'
+version = '1.0.5'
 
 buildscript {
     repositories {
@@ -51,7 +51,7 @@ install {
             packaging 'aar'
             groupId "com.hold1"
             artifactId "pagertabindicator"
-            version '1.0.4'
+            version '1.0.5'
 
             licenses {
                 license {
@@ -91,9 +91,9 @@ bintray {
             vcsTag = version
             released = new Date()
             version {
-                name = '1.0.4'
+                name = '1.0.5'
                 desc = 'A flexible library for adding tabs to a view pager.'
-                vcsTag = '1.0.4'
+                vcsTag = '1.0.5'
                 attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
             }
         }
