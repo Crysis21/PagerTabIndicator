@@ -24,7 +24,7 @@ https://play.google.com/store/apps/details?id=com.hold1.pagertabsdemo
 Add the following line in your build.gradle file
 
 ```gradle
-compile 'com.hold1:pagertabindicator:1.0.6'
+compile 'com.hold1:pagertabindicator:1.0.7'
 ```
 
 Inside your layout insert a PagerTabIndicator element
@@ -74,7 +74,8 @@ In your java code you should create a PagerAdapter for your ViewPager. After ini
 * `tab_show_bar_indicator` - param to show/hide the indicator bar. default set tot true
 * `tab_elevation` - set tabElevation to the tab bar. In case of bottom bar placement, you should use a higher value to make the shadow more visible.
 * `tab_disable_animation` - disable indicator animation while switching tabs
-
+* `tab_highlight_text` - highlight the text color of the current tab for basic PagerAdapters. Defaults to indicator color.
+* `tab_highlight_text_color` - set a custom color for highlighted tab text.
 
 #### Changing params at runtime
 

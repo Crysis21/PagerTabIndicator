@@ -21,6 +21,8 @@
         <attr name="tab_show_bar_indicator" format="boolean"/>
         <attr name="tab_elevation" format="dimension"/>
         <attr name="tab_disable_animation" format="boolean"/>
+        <attr name="tab_highlight_text" format="boolean"/>
+        <attr name="tab_highlight_text_color" format="color"/>
     </declare-styleable>
 
     <attr name="tab_indicator">
