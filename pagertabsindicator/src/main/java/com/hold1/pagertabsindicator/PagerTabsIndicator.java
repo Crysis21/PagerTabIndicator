@@ -325,6 +325,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         bgRect.right = tabsContainer.getRight();
 
         View currentTab = tabsContainer.getChildAt(position);
+        if (currentTab==null) return;
         if (disableTabAnimation) {
             currentTab = tabsContainer.getChildAt(Math.round(position + positionOffset));
         }

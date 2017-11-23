@@ -24,7 +24,7 @@ https://play.google.com/store/apps/details?id=com.hold1.pagertabsdemo
 Add the following line in your build.gradle file
 
 ```gradle
-compile 'com.hold1:pagertabindicator:1.0.5'
+compile 'com.hold1:pagertabindicator:1.0.6'
 ```
 
 Inside your layout insert a PagerTabIndicator element
@@ -74,3 +74,19 @@ In your java code you should create a PagerAdapter for your ViewPager. After ini
 * `tab_show_bar_indicator` - param to show/hide the indicator bar. default set tot true
 * `tab_elevation` - set tabElevation to the tab bar. In case of bottom bar placement, you should use a higher value to make the shadow more visible.
 * `tab_disable_animation` - disable indicator animation while switching tabs
+
+
+#### Changing params at runtime
+
+In order to change the TabsIndicator parameters at run-time, you can call setters for all supported paramteres. To make things easier, setters can be chained. After setting the properties, it's mandatory to call `refresh()` in order to apply changes.
+
+```java
+ tabsIndicator.setShowDivider(false)
+                        .setIndicatorBgHeight(0)
+                        .setShowBarIndicator(false)
+                        .setHeight(getResources().getDimensionPixelSize(R.dimen.tab_height_min))
+                        .refresh();
+
+```
+
+#### TabViewProvider
