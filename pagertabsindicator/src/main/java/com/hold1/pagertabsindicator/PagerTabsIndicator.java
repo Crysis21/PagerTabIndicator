@@ -78,7 +78,9 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private Drawable dividerDrawable;
 
 
+    private boolean highlightText = false;
     private int textColor;
+    private int highlightTextColor;
     private int tabPadding;
     private boolean lockExpanded = false;
     private boolean showBarIndicator = true;
@@ -121,6 +123,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         //Load default colors
         textColor = getResources().getColor(R.color.tab_default_text_color);
         indicatorColor = getResources().getColor(R.color.tab_indicator_color);
+        highlightTextColor = indicatorColor;
         indicatorBgColor = getResources().getColor(R.color.tab_indicator_bg_color);
         dividerColor = getResources().getColor(R.color.tab_default_divider_color);
         tabPadding = getResources().getDimensionPixelSize(R.dimen.tab_default_padding);
@@ -130,6 +133,8 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         tabPadding = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_padding, tabPadding);
         textSize = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_text_size, textSize);
         textColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_text_color, textColor);
+        highlightTextColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_highlight_text_color, highlightTextColor);
+        highlightText = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_highlight_text_color, highlightText);
         showDivider = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_divider, showDivider);
         lockExpanded = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_lock_expanded, lockExpanded);
         indicatorType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator, indicatorType);
@@ -252,7 +257,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 innerView = new TabView(getContext(), innerView);
             } else {
                 innerView = createTextView(viewPager.getAdapter().getPageTitle(i).toString());
-                innerView = new TabView(getContext(), innerView);
             }
 
             addTabView(innerView, i);
@@ -260,13 +264,25 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     }
 
     private View createTextView(String text) {
-        TextView textView = new TextView(getContext());
+
+        final TextView textView = new TextView(getContext());
         textView.setText(text);
         textView.setGravity(Gravity.CENTER);
         textView.setSingleLine();
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setTextColor(textColor);
-        return textView;
+
+
+        TabView tabView = new TabView(getContext(), textView) {
+            @Override
+            public void onOffset(float offset) {
+                super.onOffset(offset);
+                if (highlightText) {
+                    ((TextView) getChildAt(0)).setTextColor(Util.mixTwoColors(highlightTextColor, textColor, offset));
+                }
+            }
+        };
+        return tabView;
     }
 
     private View createImageView() {
@@ -325,7 +341,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         bgRect.right = tabsContainer.getRight();
 
         View currentTab = tabsContainer.getChildAt(position);
-        if (currentTab==null) return;
+        if (currentTab == null) return;
         if (disableTabAnimation) {
             currentTab = tabsContainer.getChildAt(Math.round(position + positionOffset));
         }
@@ -642,6 +658,24 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         return this;
     }
 
+    public boolean isHighlightText() {
+        return highlightText;
+    }
+
+    public PagerTabsIndicator setHighlightText(boolean highlightText) {
+        this.highlightText = highlightText;
+        return this;
+    }
+
+    public int getHighlightTextColor() {
+        return highlightTextColor;
+    }
+
+    public PagerTabsIndicator setHighlightTextColor(int highlightTextColor) {
+        this.highlightTextColor = highlightTextColor;
+        return this;
+    }
+
     public void refresh() {
         tabWidth = LayoutParams.WRAP_CONTENT;
         prepareResources();
@@ -652,5 +686,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         getLayoutParams().height = height;
         requestLayout();
         return this;
+    }
+
+    public View getTabAt(int position) {
+        if (position < tabsContainer.getChildCount()) {
+            return tabsContainer.getChildAt(position);
+        }
+        return null;
     }
 }

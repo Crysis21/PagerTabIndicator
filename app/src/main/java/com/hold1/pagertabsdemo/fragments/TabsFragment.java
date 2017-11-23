@@ -1,5 +1,6 @@
 package com.hold1.pagertabsdemo.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -57,6 +58,9 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
 
     @BindView(R.id.show_bar_indicator)
     CheckBox showBarIndicator;
+
+    @BindView(R.id.highlight_text)
+    CheckBox highlightText;
 
     @Nullable
     @Override
@@ -198,6 +202,13 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 tabsIndicator.setShowBarIndicator(isChecked).refresh();
+            }
+        });
+
+        highlightText.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                tabsIndicator.setHighlightText(true).setHighlightTextColor(Color.RED).refresh();
             }
         });
     }

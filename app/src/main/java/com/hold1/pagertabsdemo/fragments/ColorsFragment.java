@@ -64,6 +64,10 @@ public class ColorsFragment extends Fragment implements FragmentPresenter {
                         break;
                     case R.id.color_bg:
                         tabsIndicator.setBackgroundColor(colorPicker.getSelectedColor());
+                        break;
+                    case R.id.highlight_color:
+                        tabsIndicator.setHighlightTextColor(colorPicker.getSelectedColor());
+                        break;
                 }
                 tabsIndicator.refresh();
             }
