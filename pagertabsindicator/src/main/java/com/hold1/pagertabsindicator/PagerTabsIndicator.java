@@ -18,6 +18,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
@@ -44,6 +45,11 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     private LinearLayout tabsContainer;
     private ViewPager viewPager;
+    private ViewPager.OnAdapterChangeListener adapterChangeListener;
+    private TabViewProvider tabProvider;
+
+    private DataSetObserver adapterObserver;
+    private PagerAdapter adapter;
 
     private int textSize;
 
@@ -58,6 +64,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     private int indicatorColor;
     private int indicatorBgColor;
     private Drawable indicatorDrawable;
+
     //Use this if you want a custom resource to be drawn as tab indicator
     private Paint bgPaing;
     private int indicatorResource = -1;
@@ -155,6 +162,18 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
         typedArray.recycle();
         prepareResources();
+
+        adapterObserver = new DataSetObserver() {
+            @Override
+            public void onChanged() {
+                notifyDatasetChanged();
+            }
+
+            @Override
+            public void onInvalidated() {
+                super.onInvalidated();
+            }
+        };
     }
 
     private void prepareResources() {
@@ -183,6 +202,18 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         ViewCompat.setElevation(this, tabElevation);
     }
 
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        Log.d(TAG, "intercept touch");
+        return super.onInterceptTouchEvent(ev);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
@@ -197,7 +228,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
                 View view = tabsContainer.getChildAt(i);
                 view.getLayoutParams().width = tabWidth;
-                view.requestLayout();
             }
         }
     }
@@ -225,17 +255,35 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         super.measureChildWithMargins(child, parentWidthMeasureSpec, widthUsed, parentHeightMeasureSpec, heightUsed);
     }
 
+
     public void setViewPager(ViewPager viewPager) {
+        if (viewPager == null) {
+            tabsContainer.removeAllViews();
+            if (this.viewPager!=null) {
+                this.viewPager.removeOnAdapterChangeListener(adapterChangeListener);
+                this.viewPager.removeOnPageChangeListener(this);
+            }
+            this.viewPager = viewPager;
+            return;
+        }
         this.viewPager = viewPager;
-        viewPager.addOnPageChangeListener(this);
-        viewPager.addOnAdapterChangeListener(new ViewPager.OnAdapterChangeListener() {
+        this.viewPager.addOnPageChangeListener(this);
+        adapterChangeListener = new ViewPager.OnAdapterChangeListener() {
             @Override
             public void onAdapterChanged(@NonNull ViewPager viewPager, @Nullable PagerAdapter oldAdapter, @Nullable PagerAdapter newAdapter) {
                 listenToAdapterChanges(newAdapter);
             }
-        });
+        };
+        viewPager.addOnAdapterChangeListener(adapterChangeListener);
 
         listenToAdapterChanges(viewPager.getAdapter());
+    }
+
+    public void setTabProvider(TabViewProvider tabProvider) {
+        if (this.viewPager != null) {
+            viewPager.removeOnPageChangeListener(this);
+            viewPager.removeOnAdapterChangeListener(adapterChangeListener);
+        }
     }
 
     public void notifyDatasetChanged() {
@@ -273,7 +321,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         textView.setTextColor(textColor);
 
 
-        TabView tabView = new TabView(getContext(), textView) {
+        return new TabView(PagerTabsIndicator.this.getContext(), textView) {
             @Override
             public void onOffset(float offset) {
                 super.onOffset(offset);
@@ -282,7 +330,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
                 }
             }
         };
-        return tabView;
     }
 
     private View createImageView() {
@@ -305,25 +352,16 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             }
         });
     }
-
     private void listenToAdapterChanges(PagerAdapter pagerAdapter) {
+        if (adapter != null) {
+            adapter.unregisterDataSetObserver(adapterObserver);
+        }
         if (pagerAdapter == null) {
             Log.e(TAG, "listenToAdapterChanges - pager adapter is null. can't register");
             return;
         }
-
-        pagerAdapter.registerDataSetObserver(new DataSetObserver() {
-            @Override
-            public void onChanged() {
-                notifyDatasetChanged();
-            }
-
-            @Override
-            public void onInvalidated() {
-                super.onInvalidated();
-            }
-        });
-
+        this.adapter = pagerAdapter;
+        this.adapter.registerDataSetObserver(adapterObserver);
         notifyDatasetChanged();
     }
 
@@ -338,7 +376,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
         if (!showBarIndicator) return;
 
         bgRect.left = 0;
-        bgRect.right = tabsContainer.getRight();
+        bgRect.right = Math.max(getRight(), tabsContainer.getWidth());
 
         View currentTab = tabsContainer.getChildAt(position);
         if (currentTab == null) return;
@@ -415,7 +453,6 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     //Listen View Pager events
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        Log.d(TAG, "position=" + position + " offset=" + positionOffset);
         this.position = position;
         this.positionOffset = positionOffset;
         if (targetPosition == -1)
@@ -677,6 +714,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     }
 
     public void refresh() {
+        Log.d(TAG, "refresh");
         tabWidth = LayoutParams.WRAP_CONTENT;
         prepareResources();
         notifyDatasetChanged();
