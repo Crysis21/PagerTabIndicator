@@ -1,0 +1,24 @@
+[INFO] output of locale.getdefaultlocale(): ('en_RO', 'UTF-8')
+[INFO] encoding we chose in the end: ascii
+[INFO] Running command /usr/local/Cellar/infer/0.13.0/lib/infer/infer/bin/../lib/python/infer.py --analyzer checkers -j 8 --project-root /Volumes/MacHD/Gradle/PagerTabsIndicator --out /Volumes/MacHD/Gradle/PagerTabsIndicator/infer-out -- gradle build
+[INFO] Path to infer script /usr/local/Cellar/infer/0.13.0/lib/infer/infer/bin/../lib/python/infer.py (/usr/local/Cellar/infer/0.13.0/lib/infer/infer/lib/python/infer.py)
+[INFO] Platform: Darwin-17.2.0-x86_64-i386-64bit
+[INFO] PATH=/usr/local/php5/bin:/Users/cristi/Library/Python/2.7/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/php5/bin:/Users/cristi/Library/Python/2.7/bin:/Volumes/MacHD/android-sdk-macosx/platform-tools/:/Users/cristi/pear/bin:/Volumes/MacHD/android-sdk-macosx/build-tools/23.0.2:/Volumes/MacHD/android-sdk-macosx/emulator/:/Volumes/MacHD/android-sdk-macosx/platform-tools/:/Users/cristi/pear/bin:/Volumes/MacHD/android-sdk-macosx/build-tools/23.0.2:/Volumes/MacHD/android-sdk-macosx/emulator/
+[INFO] SHELL=/bin/bash
+[INFO] PWD=/Volumes/MacHD/Gradle/PagerTabsIndicator
+[INFO] Running with:
+
+------------------------------------------------------------
+Gradle 4.2.1
+------------------------------------------------------------
+
+Build time:   2017-10-02 15:36:21 UTC
+Revision:     a88ebd6be7840c2e59ae4782eb0f27fbe3405ddf
+
+Groovy:       2.4.12
+Ant:          Apache Ant(TM) version 1.9.6 compiled on June 29 2015
+JVM:          1.8.0_112 (Oracle Corporation 25.112-b16)
+OS:           Mac OS X 10.13.1 x86_64
+
+
+[ERROR] Error during capture phase, exiting
