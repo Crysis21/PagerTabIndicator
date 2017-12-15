@@ -218,17 +218,20 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
         Log.d(TAG, "layout width=" + (r - l));
+        if (!changed) return;
         final int newWidth = r - l;
         final int childCount = tabsContainer.getChildCount();
         if (lockExpanded && childCount > 0) {
             int newTabWidth = newWidth / childCount;
-            if (newTabWidth == 0 || newTabWidth == tabWidth) return;
+            if (newTabWidth == 0) return;
             tabWidth = newTabWidth;
             Log.d(TAG, "newWidth=" + newWidth + " tabWidth=" + tabWidth);
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
                 View view = tabsContainer.getChildAt(i);
                 view.getLayoutParams().width = tabWidth;
+//                view.requestLayout();
             }
+            tabsContainer.setLayoutParams(tabsContainer.getLayoutParams());
         }
     }
 

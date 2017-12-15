@@ -1,0 +1,14 @@
+[29592][environment] CWD = /Volumes/MacHD/Gradle/PagerTabsIndicator
+[29592][environment] No .inferconfig file found
+[29592][environment] Project root = /Volumes/MacHD/Gradle/PagerTabsIndicator
+[29592][environment] INFER_ARGS = @/var/folders/qn/mmtlv9ys0tgfj7rs48jw4dp40000gn/T/args_7effb6
+[29592][environment]   Contents of '/var/folders/qn/mmtlv9ys0tgfj7rs48jw4dp40000gn/T/args_7effb6'
+[29592][environment]   run
+[29592][environment]   /Contents of '/var/folders/qn/mmtlv9ys0tgfj7rs48jw4dp40000gn/T/args_7effb6'
+[29592][environment] command line arguments: /usr/local/Cellar/infer/0.13.0/libexec/bin/infer^run^--^gradle^build
+[29592][environment] Analyzer: checkers
+[29592][environment] Active checkers: annotation reachability (Java), biabduction (C/C++/ObjC, Java), fragment retains view (Java), immutable cast (Java), liveness (C/C++/ObjC), printf args (Java), quandary (C/C++/ObjC, Java), RacerD (C/C++/ObjC, Java), SIOF (C/C++/ObjC)
+[29592][   progress] Capturing in gradle mode...
+[29592][environment] Infer version v0.13.0
+[29592][environment] Copyright 2009 - present Facebook. All Rights Reserved.
+[29592][environment] 
