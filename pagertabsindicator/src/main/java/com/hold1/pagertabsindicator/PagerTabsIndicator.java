@@ -205,8 +205,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        Log.d(TAG, "intercept touch");
-        return super.onInterceptTouchEvent(ev);
+        return !lockExpanded && super.onInterceptTouchEvent(ev);
     }
 
     @Override
@@ -229,7 +228,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             for (int i = 0; i < tabsContainer.getChildCount(); i++) {
                 View view = tabsContainer.getChildAt(i);
                 view.getLayoutParams().width = tabWidth;
-//                view.requestLayout();
+                view.requestLayout();
             }
             tabsContainer.setLayoutParams(tabsContainer.getLayoutParams());
         }
@@ -262,7 +261,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     public void setViewPager(ViewPager viewPager) {
         if (viewPager == null) {
             tabsContainer.removeAllViews();
-            if (this.viewPager!=null) {
+            if (this.viewPager != null) {
                 this.viewPager.removeOnAdapterChangeListener(adapterChangeListener);
                 this.viewPager.removeOnPageChangeListener(this);
             }
@@ -355,6 +354,7 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
             }
         });
     }
+
     private void listenToAdapterChanges(PagerAdapter pagerAdapter) {
         if (adapter != null) {
             adapter.unregisterDataSetObserver(adapterObserver);
