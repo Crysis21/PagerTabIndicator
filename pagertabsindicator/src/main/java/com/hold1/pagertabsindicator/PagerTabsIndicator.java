@@ -456,10 +456,12 @@ public class PagerTabsIndicator extends HorizontalScrollView implements ViewPage
     //Listen View Pager events
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        Log.d(TAG, "onPageScrolled:position=" + position + ";positionOffset:" + positionOffset + ";tabsContainer child count:" + tabsContainer.getChildCount());
         this.position = position;
         this.positionOffset = positionOffset;
-        if (targetPosition == -1)
+        if (targetPosition == -1 && tabsContainer.getChildCount() > position) {
             scrollToChild(position, (int) (positionOffset * tabsContainer.getChildAt(position).getWidth()));
+        }
         int targetPosition = Math.round(position + positionOffset);
         float targetOffset = (float) Math.abs(0.5 - positionOffset) * 2;
         for (int i = 0; i < tabsContainer.getChildCount(); i++) {
