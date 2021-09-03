@@ -29,7 +29,7 @@
         app:tab_elevation="20dp"
         android:background="#ffffff"
         app:tab_indicator="bottom_bar"
-        app:tab_indicator_scale_type="centerInside"
+        app:tab_indicator_scale_type="fitXY"
         app:tab_lock_expanded="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

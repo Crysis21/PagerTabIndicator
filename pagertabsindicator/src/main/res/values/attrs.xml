@@ -30,6 +30,7 @@
         <enum name="bottom_bar" value="1" />
         <enum name="background" value="2" />
     </attr>
+
     <attr name="tab_indicator_scale_type">
         <enum name="fitXY" value="0"/>
         <enum name="centerInside" value="1"/>
