@@ -16,11 +16,10 @@ buildscript {
 apply plugin: 'com.jfrog.bintray'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 28
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 26
         versionName = version
     }
 
@@ -34,68 +33,68 @@ android {
 }
 
 dependencies {
-    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.3.1'
 }
 
 
-install {
-    repositories.mavenInstaller {
-        pom.project {
-            name 'PagerTabIndicator'
-            description 'A flexible library for adding tabs to a view pager.'
-            url 'https://github.com/Crysis21/PagerTabIndicator'
-            inceptionYear '2017'
+//install {
+//    repositories.mavenInstaller {
+//        pom.project {
+//            name 'PagerTabIndicator'
+//            description 'A flexible library for adding tabs to a view pager.'
+//            url 'https://github.com/Crysis21/PagerTabIndicator'
+//            inceptionYear '2017'
+//
+//            packaging 'aar'
+//            groupId "com.hold1"
+//            artifactId "pagertabindicator"
+//            version '1.0.11'
+//
+//            licenses {
+//                license {
+//                    name 'The Apache Software License, Version 2.0'
+//                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+//                    distribution 'repo'
+//                }
+//            }
+//            scm {
+//                connection 'https://github.com/Crysis21/PagerTabIndicator.git'
+//                url 'https://github.com/Crysis21/PagerTabIndicator'
+//
+//            }
+//            developers {
+//                developer {
+//                    name 'Cristian Holdunu'
+//                }
+//            }
+//        }
+//    }
+//}
 
-            packaging 'aar'
-            groupId "com.hold1"
-            artifactId "pagertabindicator"
-            version '1.0.11'
-
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                    distribution 'repo'
-                }
-            }
-            scm {
-                connection 'https://github.com/Crysis21/PagerTabIndicator.git'
-                url 'https://github.com/Crysis21/PagerTabIndicator'
-
-            }
-            developers {
-                developer {
-                    name 'Cristian Holdunu'
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    user = BINTRAY_USER
-    key = BINTRAY_KEY
-    configurations = ['archives']
-
-    pkg {
-        repo = 'Android'
-        name = 'PagerTabIndicator'
-        userOrg = 'crysis21'
-        licenses = ['Apache-2.0']
-        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
-        version {
-            name = version
-            desc = 'PagerTabIndicator ' + version
-            vcsTag = version
-            released = new Date()
-            version {
-                name = '1.0.11'
-                desc = 'A flexible library for adding tabs to a view pager.'
-                vcsTag = '1.0.11'
-                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-            }
-        }
-    }
-}
+//bintray {
+//    user = BINTRAY_USER
+//    key = BINTRAY_KEY
+//    configurations = ['archives']
+//
+//    pkg {
+//        repo = 'Android'
+//        name = 'PagerTabIndicator'
+//        userOrg = 'crysis21'
+//        licenses = ['Apache-2.0']
+//        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
+//        version {
+//            name = version
+//            desc = 'PagerTabIndicator ' + version
+//            vcsTag = version
+//            released = new Date()
+//            version {
+//                name = '1.0.11'
+//                desc = 'A flexible library for adding tabs to a view pager.'
+//                vcsTag = '1.0.11'
+//                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+//            }
+//        }
+//    }
+//}

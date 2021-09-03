@@ -3,19 +3,18 @@ package com.hold1.pagertabsdemo.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import com.hold1.pagertabsdemo.MainActivity;
 import com.hold1.pagertabsdemo.R;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 
-import br.tiagohm.markdownview.MarkdownView;
-import br.tiagohm.markdownview.css.styles.Github;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -27,8 +26,8 @@ public class ContactFragment extends Fragment implements FragmentPresenter{
 
     private PagerTabsIndicator tabsIndicator;
 
-    @BindView(R.id.markdown_view)
-    MarkdownView markdownView;
+//    @BindView(R.id.markdown_view)
+//    MarkdownView markdownView;
 
     @BindView(R.id.open_git)
     Button github;
@@ -46,8 +45,6 @@ public class ContactFragment extends Fragment implements FragmentPresenter{
         tabsIndicator = ((MainActivity)getActivity()).getTabsIndicator();
         if (tabsIndicator==null) return;
         ButterKnife.bind(this, view);
-        markdownView.addStyleSheet(new Github());
-        markdownView.loadMarkdownFromUrl("https://raw.githubusercontent.com/Crysis21/PagerTabIndicator/master/Readme.md");
         github.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
