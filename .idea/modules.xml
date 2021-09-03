@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/PagerTabIndicator.iml" filepath="$PROJECT_DIR$/.idea/PagerTabIndicator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/PagerTabIndicator.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/PagerTabIndicator.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pagertabsindicator/PagerTabIndicator.pagertabsindicator.iml" filepath="$PROJECT_DIR$/.idea/modules/pagertabsindicator/PagerTabIndicator.pagertabsindicator.iml" />
+    </modules>
+  </component>
+</project>
