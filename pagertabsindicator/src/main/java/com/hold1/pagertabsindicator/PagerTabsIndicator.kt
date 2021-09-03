@@ -13,6 +13,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -29,16 +30,18 @@ import kotlin.math.roundToInt
 
 class PagerTabsIndicator @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null
-) : HorizontalScrollView(context, attrs), OnPageChangeListener {
+) : HorizontalScrollView(context, attrs) {
     private var tabsContainer: LinearLayout = LinearLayout(context)
-    private var viewPager: ViewPager? = null
-    private var adapterChangeListener: OnAdapterChangeListener? = null
-    private val tabProvider: TabViewProvider? = null
-    private var adapterObserver: DataSetObserver? = null
-    private var adapter: PagerAdapter? = null
+//    private var viewPager: ViewPager? = null
+//    private var adapterChangeListener: OnAdapterChangeListener? = null
+//    private var adapterObserver: DataSetObserver? = null
+//    private var adapter: PagerAdapter? = null
+    private var adapter: TabsAdapter? = null
 
-    private var textSize = resources.getDimensionPixelSize(R.dimen.tab_default_text_size)
-
+    fun setAdapter(adapter: TabsAdapter?) {
+        this.adapter?.pagerTabsIndicator = this
+        this.adapter = adapter
+    }
     private var indicatorType = TAB_INDICATOR_BOTTOM
     private var indicatorHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_height)
     private var indicatorBgHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
@@ -89,7 +92,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
     private var dividerDrawable: Drawable? = null
 
     private var isHighlightText = false
+
+    private var textSize = resources.getDimensionPixelSize(R.dimen.tab_default_text_size)
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     private var textColor = resources.getColor(R.color.tab_default_text_color)
+
     private var highlightTextColor = resources.getColor(R.color.tab_indicator_color)
     private var tabPadding = resources.getDimensionPixelSize(R.dimen.tab_default_padding)
     private var isLockExpanded = false
@@ -135,12 +142,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
         indicatorScaleType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator_scale_type, indicatorScaleType)
         isDisableTabAnimation = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_disable_animation, isDisableTabAnimation)
         typedArray.recycle()
-
-        adapterObserver = object : DataSetObserver() {
-            override fun onChanged() {
-                notifyDatasetChanged()
-            }
-        }
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
@@ -197,105 +198,115 @@ class PagerTabsIndicator @JvmOverloads constructor(
         )
     }
 
-    fun setViewPager(viewPager: ViewPager?) {
-        if (viewPager != this.viewPager) {
-            tabsContainer.removeAllViews()
-        }
-        adapterChangeListener?.let { this.viewPager?.removeOnAdapterChangeListener(it) }
-        this.viewPager?.removeOnPageChangeListener(this)
-        this.viewPager = viewPager
-        this.viewPager?.addOnPageChangeListener(this)
-        adapterChangeListener = OnAdapterChangeListener { _, _, newAdapter ->
-            listenToAdapterChanges(newAdapter)
-        }
-        adapterChangeListener?.let {
-            viewPager?.addOnAdapterChangeListener(it)
-        }
-        listenToAdapterChanges(viewPager?.adapter)
-    }
-
-    fun setTabProvider(tabProvider: TabViewProvider?) {
-        viewPager?.removeOnPageChangeListener(this)
-        adapterChangeListener?.let { viewPager?.removeOnAdapterChangeListener(it) }
-    }
-
-    fun notifyDatasetChanged() {
-        if (viewPager == null || viewPager!!.adapter == null) return
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
+    fun invalidateViews() {
         tabsContainer.removeAllViews()
-        for (i in 0 until viewPager!!.adapter!!.count) {
-            var innerView: View?
-            if (viewPager!!.adapter is CustomView) {
-                innerView = (viewPager!!.adapter as CustomView?)!!.getView(i)
-            } else if (viewPager!!.adapter is TabViewProvider.ImageProvider) {
-                val imageProvider = viewPager!!.adapter as TabViewProvider.ImageProvider?
-                innerView = createImageView()
-                if (imageProvider!!.getImageUri(i) != null) {
-                    Glide.with(context).load(imageProvider.getImageUri(i))
-                            .into(innerView as ImageView)
-                } else if (imageProvider.getImageResourceId(i) != 0) {
-                    (innerView as ImageView?)!!.setImageResource(imageProvider.getImageResourceId(i))
-                }
-                innerView = TabView(context, innerView)
-            } else {
-                innerView = createTextView(viewPager!!.adapter!!.getPageTitle(i).toString())
-            }
-            addTabView(innerView, i)
-        }
-    }
-
-    private fun createTextView(text: String): View {
-        val textView = TextView(context)
-        textView.text = text
-        textView.gravity = Gravity.CENTER
-        textView.setSingleLine()
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
-        textView.setTextColor(textColor)
-        return object : TabView(this@PagerTabsIndicator.context, textView) {
-            override fun onOffset(offset: Float) {
-                super.onOffset(offset)
-                if (isHighlightText) {
-                    (getChildAt(0) as TextView).setTextColor(
-                            Util.mixTwoColors(
-                                    highlightTextColor,
-                                    textColor,
-                                    offset
-                            )
-                    )
-                }
+        adapter?.let { tabsAdapter ->
+            for (i in 0 until tabsAdapter.getCount()) {
+                addTabView(tabsAdapter.getTabAt(i), i)
             }
         }
     }
 
-    private fun createImageView(): View {
-        val imageView = ImageView(context)
-        imageView.setPadding(tabPadding, tabPadding, tabPadding, tabPadding)
-        imageView.scaleType = ImageView.ScaleType.FIT_XY
-        imageView.adjustViewBounds = true
-        return imageView
-    }
+//    fun setViewPager(viewPager: ViewPager?) {
+//        if (viewPager != this.viewPager) {
+//            tabsContainer.removeAllViews()
+//        }
+//        adapterChangeListener?.let { this.viewPager?.removeOnAdapterChangeListener(it) }
+//        this.viewPager?.removeOnPageChangeListener(this)
+//        this.viewPager = viewPager
+//        this.viewPager?.addOnPageChangeListener(this)
+//        adapterChangeListener = OnAdapterChangeListener { _, _, newAdapter ->
+//            listenToAdapterChanges(newAdapter)
+//        }
+//        adapterChangeListener?.let {
+//            viewPager?.addOnAdapterChangeListener(it)
+//        }
+//        listenToAdapterChanges(viewPager?.adapter)
+//    }
+
+//    fun setTabProvider(tabProvider: TabViewProvider?) {
+//        viewPager?.removeOnPageChangeListener(this)
+//        adapterChangeListener?.let { viewPager?.removeOnAdapterChangeListener(it) }
+//    }
+
+//    fun notifyDatasetChanged() {
+//        if (viewPager == null || viewPager!!.adapter == null) return
+//        tabsContainer.removeAllViews()
+//        for (i in 0 until viewPager!!.adapter!!.count) {
+//            var innerView: View?
+//            if (viewPager!!.adapter is CustomView) {
+//                innerView = (viewPager!!.adapter as CustomView?)!!.getView(i)
+//            } else if (viewPager!!.adapter is TabViewProvider.ImageProvider) {
+//                val imageProvider = viewPager!!.adapter as TabViewProvider.ImageProvider?
+//                innerView = createImageView()
+//                if (imageProvider!!.getImageUri(i) != null) {
+//                    Glide.with(context).load(imageProvider.getImageUri(i))
+//                            .into(innerView as ImageView)
+//                } else if (imageProvider.getImageResourceId(i) != 0) {
+//                    (innerView as ImageView?)!!.setImageResource(imageProvider.getImageResourceId(i))
+//                }
+//                innerView = TabView(context, innerView)
+//            } else {
+//                innerView = createTextView(viewPager!!.adapter!!.getPageTitle(i).toString())
+//            }
+//            addTabView(innerView, i)
+//        }
+//    }
+//
+//    private fun createTextView(text: String): View {
+//        val textView = TextView(context)
+//        textView.text = text
+//        textView.gravity = Gravity.CENTER
+//        textView.setSingleLine()
+//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
+//        textView.setTextColor(textColor)
+//        return object : TabView(this@PagerTabsIndicator.context, textView) {
+//            override fun onOffset(offset: Float) {
+//                super.onOffset(offset)
+//                if (isHighlightText) {
+//                    (getChildAt(0) as TextView).setTextColor(
+//                            Util.mixTwoColors(
+//                                    highlightTextColor,
+//                                    textColor,
+//                                    offset
+//                            )
+//                    )
+//                }
+//            }
+//        }
+//    }
+//
+//    private fun createImageView(): View {
+//        val imageView = ImageView(context)
+//        imageView.setPadding(tabPadding, tabPadding, tabPadding, tabPadding)
+//        imageView.scaleType = ImageView.ScaleType.FIT_XY
+//        imageView.adjustViewBounds = true
+//        return imageView
+//    }
 
     private fun addTabView(view: View?, position: Int) {
         tabsContainer.addView(view, LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT))
         view?.setPadding(tabPadding, 0, tabPadding, 0)
         view?.setOnClickListener {
             Log.d(TAG, "tab click $position")
-            viewPager!!.currentItem = position
+            adapter?.setPosition(position)
             targetPosition = position
         }
     }
-
-    private fun listenToAdapterChanges(pagerAdapter: PagerAdapter?) {
-        //remove old adapter if present
-        adapterObserver?.let { adapter?.unregisterDataSetObserver(it) }
-
-        if (pagerAdapter == null) {
-            Log.e(TAG, "listenToAdapterChanges - pager adapter is null. can't register")
-            return
-        }
-        adapter = pagerAdapter
-        adapterObserver?.let { adapter?.registerDataSetObserver(it) }
-        notifyDatasetChanged()
-    }
+//
+//    private fun listenToAdapterChanges(pagerAdapter: PagerAdapter?) {
+//        //remove old adapter if present
+//        adapterObserver?.let { adapter?.unregisterDataSetObserver(it) }
+//
+//        if (pagerAdapter == null) {
+//            Log.e(TAG, "listenToAdapterChanges - pager adapter is null. can't register")
+//            return
+//        }
+//        adapter = pagerAdapter
+//        adapterObserver?.let { adapter?.registerDataSetObserver(it) }
+//        notifyDatasetChanged()
+//    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -316,12 +327,14 @@ class PagerTabsIndicator @JvmOverloads constructor(
             indicatorRect.left = currentTab.left
             indicatorRect.right = currentTab.right
         }
-        if (positionOffset > 0f && position < viewPager!!.adapter!!.count - 1 && !isDisableTabAnimation) {
-            val nextTab = tabsContainer.getChildAt(position + 1)
-            indicatorRect.left =
-                    (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
-            indicatorRect.right =
-                    (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+        adapter?.let {
+            if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
+                val nextTab = tabsContainer.getChildAt(position + 1)
+                indicatorRect.left =
+                        (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
+                indicatorRect.right =
+                        (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+            }
         }
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
@@ -390,7 +403,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     //Listen View Pager events
-    override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+    fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         Log.d(
                 TAG,
                 "onPageScrolled:position=" + position + ";positionOffset:" + positionOffset + ";tabsContainer child count:" + tabsContainer.childCount
@@ -416,11 +429,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
         invalidate()
     }
 
-    override fun onPageSelected(position: Int) {
+    fun onPageSelected(position: Int) {
         Log.d(TAG, "onPageSelected=$position")
     }
 
-    override fun onPageScrollStateChanged(state: Int) {
+    fun onPageScrollStateChanged(state: Int) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             if (targetPosition != -1) setTabSelected(targetPosition)
             targetPosition = -1
@@ -574,7 +587,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     fun refresh() {
         Log.d(TAG, "refresh")
         tabWidth = LayoutParams.WRAP_CONTENT
-        notifyDatasetChanged()
+        invalidateViews()
     }
 
     fun setHeight(height: Int): PagerTabsIndicator {

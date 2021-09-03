@@ -25,6 +25,7 @@ import com.hold1.pagertabsdemo.fragments.FragmentPresenter;
 import com.hold1.pagertabsdemo.fragments.TabsFragment;
 import com.hold1.pagertabsindicator.PagerTabsIndicator;
 import com.hold1.pagertabsindicator.TabViewProvider;
+import com.hold1.pagertabsindicator.ViewPagerTabsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         viewCustomAnimAdapter = new CustomAnimAdapter(getSupportFragmentManager());
 
         viewPager.setAdapter(viewCustomAdapter);
-        tabsIndicator.setViewPager(viewPager);
+        tabsIndicator.setAdapter(new ViewPagerTabsAdapter(viewPager));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
