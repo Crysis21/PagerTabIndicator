@@ -1,22 +1,18 @@
-package com.hold1.pagertabsindicator;
+package com.hold1.pagertabsindicator
 
-import android.net.Uri;
-import android.view.View;
+import android.net.Uri
+import android.view.View
 
 /**
  * Created by Cristian Holdunu on 08/11/2017.
  */
-
-public class TabViewProvider {
-
-    public interface ImageProvider {
-        Uri getImageUri(int position);
-
-        int getImageResourceId(int position);
-    }
-    
-    public interface CustomView {
-        View getView(int position);
+class TabViewProvider {
+    interface ImageProvider {
+        fun getImageUri(position: Int): Uri?
+        fun getImageResourceId(position: Int): Int
     }
 
+    interface CustomView {
+        fun getView(position: Int): View?
+    }
 }

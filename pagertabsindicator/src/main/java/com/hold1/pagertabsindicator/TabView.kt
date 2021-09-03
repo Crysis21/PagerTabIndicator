@@ -1,53 +1,47 @@
-package com.hold1.pagertabsindicator;
+package com.hold1.pagertabsindicator
 
-import android.animation.ValueAnimator;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.FrameLayout;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import android.widget.FrameLayout
+import android.animation.ValueAnimator
+import android.content.Context
+import android.graphics.Color
+import android.util.AttributeSet
+import android.view.View
 
 /**
  * Created by Cristian Holdunu on 09/11/2017.
  */
+open class TabView : FrameLayout {
+    private val bgAnimator: ValueAnimator? = null
+    private val pressColor = Color.TRANSPARENT
+    private val currentBgColor = pressColor
+    private var offset = 0f
 
-public class TabView extends FrameLayout {
-    private static final String TAG = TabView.class.getSimpleName();
-
-    private ValueAnimator bgAnimator;
-    private int pressColor = Color.TRANSPARENT;
-    private int currentBgColor = pressColor;
-    private float offset = 0;
-
-    public TabView(Context context) {
-        super(context);
-        setWillNotDraw(false);
+    constructor(context: Context?) : super(context) {
+        setWillNotDraw(false)
     }
 
-
-    public TabView(Context context, View child) {
-        this(context);
-        addView(child);
+    constructor(context: Context?, child: View?) : this(context) {
+        addView(child)
     }
 
-    public TabView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-        setWillNotDraw(false);
-
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
+        setWillNotDraw(false)
     }
 
-    public TabView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-        setWillNotDraw(false);
-
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
+        setWillNotDraw(false)
     }
 
-    public void onOffset(float offset) {
-        this.offset=offset;
-        invalidate();
+    open fun onOffset(offset: Float) {
+        this.offset = offset
+        invalidate()
     }
 
+    companion object {
+        private val TAG = TabView::class.java.simpleName
+    }
 }
