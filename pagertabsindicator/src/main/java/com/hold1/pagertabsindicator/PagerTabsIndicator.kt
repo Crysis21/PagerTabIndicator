@@ -31,17 +31,20 @@ import kotlin.math.roundToInt
 class PagerTabsIndicator @JvmOverloads constructor(
         context: Context, attrs: AttributeSet? = null
 ) : HorizontalScrollView(context, attrs) {
-    private var tabsContainer: LinearLayout = LinearLayout(context)
-//    private var viewPager: ViewPager? = null
-//    private var adapterChangeListener: OnAdapterChangeListener? = null
-//    private var adapterObserver: DataSetObserver? = null
-//    private var adapter: PagerAdapter? = null
+
+    interface OnItemSelectedListener {
+        fun onItemSelected(position: Int)
+    }
+
+    interface OnItemReselectedListener {
+        fun onItemReselected(position: Int)
+    }
+
+    var onItemSelectedListener: OnItemSelectedListener? = null
+    var onItemReselectedListener: OnItemReselectedListener? = null
     private var adapter: TabsAdapter? = null
 
-    fun setAdapter(adapter: TabsAdapter?) {
-        this.adapter?.pagerTabsIndicator = this
-        this.adapter = adapter
-    }
+    private var tabsContainer: LinearLayout = LinearLayout(context)
     private var indicatorType = TAB_INDICATOR_BOTTOM
     private var indicatorHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_height)
     private var indicatorBgHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
@@ -207,106 +210,23 @@ class PagerTabsIndicator @JvmOverloads constructor(
             }
         }
     }
-
-//    fun setViewPager(viewPager: ViewPager?) {
-//        if (viewPager != this.viewPager) {
-//            tabsContainer.removeAllViews()
-//        }
-//        adapterChangeListener?.let { this.viewPager?.removeOnAdapterChangeListener(it) }
-//        this.viewPager?.removeOnPageChangeListener(this)
-//        this.viewPager = viewPager
-//        this.viewPager?.addOnPageChangeListener(this)
-//        adapterChangeListener = OnAdapterChangeListener { _, _, newAdapter ->
-//            listenToAdapterChanges(newAdapter)
-//        }
-//        adapterChangeListener?.let {
-//            viewPager?.addOnAdapterChangeListener(it)
-//        }
-//        listenToAdapterChanges(viewPager?.adapter)
-//    }
-
-//    fun setTabProvider(tabProvider: TabViewProvider?) {
-//        viewPager?.removeOnPageChangeListener(this)
-//        adapterChangeListener?.let { viewPager?.removeOnAdapterChangeListener(it) }
-//    }
-
-//    fun notifyDatasetChanged() {
-//        if (viewPager == null || viewPager!!.adapter == null) return
-//        tabsContainer.removeAllViews()
-//        for (i in 0 until viewPager!!.adapter!!.count) {
-//            var innerView: View?
-//            if (viewPager!!.adapter is CustomView) {
-//                innerView = (viewPager!!.adapter as CustomView?)!!.getView(i)
-//            } else if (viewPager!!.adapter is TabViewProvider.ImageProvider) {
-//                val imageProvider = viewPager!!.adapter as TabViewProvider.ImageProvider?
-//                innerView = createImageView()
-//                if (imageProvider!!.getImageUri(i) != null) {
-//                    Glide.with(context).load(imageProvider.getImageUri(i))
-//                            .into(innerView as ImageView)
-//                } else if (imageProvider.getImageResourceId(i) != 0) {
-//                    (innerView as ImageView?)!!.setImageResource(imageProvider.getImageResourceId(i))
-//                }
-//                innerView = TabView(context, innerView)
-//            } else {
-//                innerView = createTextView(viewPager!!.adapter!!.getPageTitle(i).toString())
-//            }
-//            addTabView(innerView, i)
-//        }
-//    }
-//
-//    private fun createTextView(text: String): View {
-//        val textView = TextView(context)
-//        textView.text = text
-//        textView.gravity = Gravity.CENTER
-//        textView.setSingleLine()
-//        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize.toFloat())
-//        textView.setTextColor(textColor)
-//        return object : TabView(this@PagerTabsIndicator.context, textView) {
-//            override fun onOffset(offset: Float) {
-//                super.onOffset(offset)
-//                if (isHighlightText) {
-//                    (getChildAt(0) as TextView).setTextColor(
-//                            Util.mixTwoColors(
-//                                    highlightTextColor,
-//                                    textColor,
-//                                    offset
-//                            )
-//                    )
-//                }
-//            }
-//        }
-//    }
-//
-//    private fun createImageView(): View {
-//        val imageView = ImageView(context)
-//        imageView.setPadding(tabPadding, tabPadding, tabPadding, tabPadding)
-//        imageView.scaleType = ImageView.ScaleType.FIT_XY
-//        imageView.adjustViewBounds = true
-//        return imageView
-//    }
+    fun setAdapter(adapter: TabsAdapter?) {
+        this.adapter = adapter
+        this.adapter?.pagerTabsIndicator = this
+    }
 
     private fun addTabView(view: View?, position: Int) {
         tabsContainer.addView(view, LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT))
         view?.setPadding(tabPadding, 0, tabPadding, 0)
         view?.setOnClickListener {
             Log.d(TAG, "tab click $position")
-            adapter?.setPosition(position)
+            onItemSelectedListener?.onItemSelected(position)
+            if (this.position == position) {
+                onItemReselectedListener?.onItemReselected(position)
+            }
             targetPosition = position
         }
     }
-//
-//    private fun listenToAdapterChanges(pagerAdapter: PagerAdapter?) {
-//        //remove old adapter if present
-//        adapterObserver?.let { adapter?.unregisterDataSetObserver(it) }
-//
-//        if (pagerAdapter == null) {
-//            Log.e(TAG, "listenToAdapterChanges - pager adapter is null. can't register")
-//            return
-//        }
-//        adapter = pagerAdapter
-//        adapterObserver?.let { adapter?.registerDataSetObserver(it) }
-//        notifyDatasetChanged()
-//    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
@@ -597,8 +517,8 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     fun getTabAt(position: Int): View? {
-        return if (position < tabsContainer?.childCount ?: 0) {
-            tabsContainer!!.getChildAt(position)
+        return if (position < tabsContainer.childCount) {
+            tabsContainer.getChildAt(position)
         } else null
     }
 
