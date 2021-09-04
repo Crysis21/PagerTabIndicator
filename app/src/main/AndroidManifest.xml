@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".ViewPagerActivity" android:exported="true"/>
         <activity android:name=".ViewPager2Activity" android:exported="true"/>
+        <activity android:name=".JetpackNavigationActivity" android:exported="true"/>
     </application>
 
 </manifest>
