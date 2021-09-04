@@ -5,12 +5,16 @@ import android.view.View
 
 sealed class TabViewProvider() {
 
-    interface ImageProvider {
-        fun getImageUri(position: Int): Uri?
-        fun getImageResourceId(position: Int): Int
+    interface ImageResource {
+        fun getTabIconUri(position: Int): Uri?
+        fun getTabIconResId(position: Int): Int
     }
 
-    interface CustomView {
-        fun getView(position: Int): View
+    interface ViewResource {
+        fun getTabView(position: Int): View
+    }
+
+    interface TextResource {
+        fun getTabTitle(position: Int): String
     }
 }

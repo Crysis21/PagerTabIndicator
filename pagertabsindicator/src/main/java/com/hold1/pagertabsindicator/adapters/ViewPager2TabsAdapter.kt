@@ -64,15 +64,18 @@ class ViewPager2TabsAdapter(val viewPager2: ViewPager2): TabsAdapter(viewPager2.
 
     override fun getTabAt(position: Int): View {
         return when (pagerAdapter) {
-            is TabViewProvider.ImageProvider -> {
+            is TabViewProvider.ImageResource -> {
                 val imageView = createImageView()
                 Glide.with(context)
-                    .load(pagerAdapter.getImageUri(position))
+                    .load(pagerAdapter.getTabIconUri(position))
                     .into(imageView)
                 imageView
             }
-            is TabViewProvider.CustomView -> {
-                pagerAdapter.getView(position)
+            is TabViewProvider.ViewResource -> {
+                pagerAdapter.getTabView(position)
+            }
+            is TabViewProvider.TextResource -> {
+                createTextView(pagerAdapter.getTabTitle(position))
             }
             else -> {
                 throw NotImplementedError("Can't generate a view tab")

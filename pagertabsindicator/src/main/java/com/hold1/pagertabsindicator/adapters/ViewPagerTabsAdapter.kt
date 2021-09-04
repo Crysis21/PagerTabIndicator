@@ -42,15 +42,18 @@ class ViewPagerTabsAdapter(viewPager: ViewPager) : TabsAdapter(viewPager.context
         Log.d("TabViewProvider", "getTabAt $position adapter=$adapter")
         adapter?.let { pagerAdapter ->
             when (pagerAdapter) {
-                is TabViewProvider.ImageProvider -> {
+                is TabViewProvider.ImageResource -> {
                     val imageView = createImageView()
                     Glide.with(context)
-                            .load(pagerAdapter.getImageUri(position))
+                            .load(pagerAdapter.getTabIconUri(position))
                             .into(imageView)
                     return@getTabAt imageView
                 }
-                is TabViewProvider.CustomView -> {
-                    return@getTabAt pagerAdapter.getView(position)
+                is TabViewProvider.ViewResource -> {
+                    return@getTabAt pagerAdapter.getTabView(position)
+                }
+                is TabViewProvider.TextResource -> {
+                    return@getTabAt createTextView(pagerAdapter.getTabTitle(position))
                 }
                 else -> {
                     return@getTabAt createTextView(pagerAdapter.getPageTitle(position).toString())
