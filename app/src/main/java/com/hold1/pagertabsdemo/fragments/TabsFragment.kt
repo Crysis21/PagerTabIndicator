@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.Fragment
-import com.hold1.pagertabsdemo.MainActivity
+import com.hold1.pagertabsdemo.ViewPagerActivity
 import com.hold1.pagertabsdemo.R
 import com.hold1.pagertabsdemo.databinding.TabsFragmentBinding
 import com.hold1.pagertabsindicator.PagerTabsIndicator
@@ -28,7 +28,7 @@ class TabsFragment : Fragment(), FragmentPresenter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tabsIndicator = (activity as? MainActivity)?.tabsIndicator
+        tabsIndicator = (activity as? ViewPagerActivity)?.tabsIndicator
         binding.textSize.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 tabsIndicator?.textSize = progress
@@ -85,7 +85,7 @@ class TabsFragment : Fragment(), FragmentPresenter {
                 tabsIndicator?.indicatorType = PagerTabsIndicator.TAB_INDICATOR_BOTTOM
             }
         }
-        binding.addDummy.setOnClickListener { (activity as? MainActivity)?.addDummyTab() }
+        binding.addDummy.setOnClickListener { (activity as? ViewPagerActivity)?.addDummyTab() }
         binding.showBarIndicator.setOnCheckedChangeListener { _, isChecked -> tabsIndicator?.showBarIndicator = isChecked }
         binding.highlightText.setOnCheckedChangeListener { _, isChecked ->
             tabsIndicator?.isHighlightText = isChecked

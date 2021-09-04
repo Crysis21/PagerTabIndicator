@@ -17,10 +17,10 @@ import com.hold1.pagertabsdemo.fragments.*
 import com.hold1.pagertabsindicator.PagerTabsIndicator
 import com.hold1.pagertabsindicator.TabViewProvider
 import com.hold1.pagertabsindicator.TabViewProvider.CustomView
-import com.hold1.pagertabsindicator.ViewPagerTabsAdapter
+import com.hold1.pagertabsindicator.adapters.ViewPagerTabsAdapter
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class ViewPagerActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     //Just for easing the demo :)

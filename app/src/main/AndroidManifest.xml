@@ -13,13 +13,15 @@
         android:theme="@style/AppTheme">
         <meta-data  android:name="android.support.VERSION" android:value="26.1.0" tools:replace="android:value"/>
 
-        <activity android:name="com.hold1.pagertabsdemo.MainActivity">
+        <activity android:name="com.hold1.pagertabsdemo.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ViewPagerActivity"/>
+        <activity android:name=".ViewPager2Activity"/>
     </application>
 
 </manifest>
