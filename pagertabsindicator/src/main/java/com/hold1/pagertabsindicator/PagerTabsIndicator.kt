@@ -22,7 +22,7 @@ import kotlin.math.roundToInt
  */
 
 class PagerTabsIndicator @JvmOverloads constructor(
-        context: Context, attrs: AttributeSet? = null
+    context: Context, attrs: AttributeSet? = null
 ) : HorizontalScrollView(context, attrs) {
 
     interface OnItemSelectedListener {
@@ -62,11 +62,13 @@ class PagerTabsIndicator @JvmOverloads constructor(
     var indicatorColor = resources.getColor(R.color.tab_indicator_color)
         set(value) {
             field = value
+            tintPaint.color = value
             invalidate()
         }
     var indicatorBgColor = resources.getColor(R.color.tab_indicator_bg_color)
         set(value) {
             field = value
+            backgroundPaint.color = value
             invalidate()
         }
     var indicatorDrawable: Drawable? = null
@@ -129,6 +131,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     var dividerColor = resources.getColor(R.color.tab_default_divider_color)
         set(value) {
             field = value
+            dividerPaint.color = value
             invalidate()
         }
     var dividerResource = -1
@@ -154,17 +157,17 @@ class PagerTabsIndicator @JvmOverloads constructor(
     var textSize = resources.getDimensionPixelSize(R.dimen.tab_default_text_size)
         set(value) {
             field = value
-            invalidate()
+            invalidateViews()
         }
     var textColor = resources.getColor(R.color.tab_default_text_color)
         set(value) {
             field = value
-            invalidate()
+            invalidateViews()
         }
     var highlightTextColor = resources.getColor(R.color.tab_indicator_color)
         set(value) {
             field = value
-            invalidate()
+            invalidateViews()
         }
     var tabPadding = resources.getDimensionPixelSize(R.dimen.tab_default_padding)
         set(value) {
@@ -174,7 +177,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     var isLockExpanded = false
         set(value) {
             field = value
-            invalidate()
+            requestLayout()
         }
     var showBarIndicator = true
         set(value) {
@@ -201,28 +204,77 @@ class PagerTabsIndicator @JvmOverloads constructor(
         addView(tabsContainer, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
 
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.PagerTabsIndicator)
-        tabPadding = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_padding, tabPadding)
-        textSize = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_text_size, textSize)
+        tabPadding =
+            typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_padding, tabPadding)
+        textSize =
+            typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_text_size, textSize)
         textColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_text_color, textColor)
-        highlightTextColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_highlight_text_color, highlightTextColor)
-        isHighlightText = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_highlight_text_color, isHighlightText)
-        isShowDivider = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_divider, isShowDivider)
-        isLockExpanded = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_lock_expanded, isLockExpanded)
-        indicatorType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator, indicatorType)
-        indicatorResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_indicator_resource, indicatorResource)
-        indicatorHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_height, indicatorHeight)
-        indicatorBgHeight = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_bg_height, indicatorBgHeight)
-        indicatorMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_indicator_margin, indicatorMargin)
-        indicatorColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_color, indicatorColor)
-        indicatorBgColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_bg_color, indicatorBgColor)
-        dividerWidth = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_divider_width, dividerWidth)
-        dividerMargin = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_divider_margin, dividerMargin)
-        dividerColor = typedArray.getColor(R.styleable.PagerTabsIndicator_tab_divider_color, dividerColor)
-        dividerResource = typedArray.getResourceId(R.styleable.PagerTabsIndicator_tab_divider_resource, dividerResource)
-        showBarIndicator = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_bar_indicator, showBarIndicator)
-        tabElevation = typedArray.getDimensionPixelSize(R.styleable.PagerTabsIndicator_tab_elevation, tabElevation)
-        indicatorScaleType = typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator_scale_type, indicatorScaleType)
-        isDisableTabAnimation = typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_disable_animation, isDisableTabAnimation)
+        highlightTextColor = typedArray.getColor(
+            R.styleable.PagerTabsIndicator_tab_highlight_text_color,
+            highlightTextColor
+        )
+        isHighlightText = typedArray.getBoolean(
+            R.styleable.PagerTabsIndicator_tab_highlight_text_color,
+            isHighlightText
+        )
+        isShowDivider =
+            typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_show_divider, isShowDivider)
+        isLockExpanded =
+            typedArray.getBoolean(R.styleable.PagerTabsIndicator_tab_lock_expanded, isLockExpanded)
+        indicatorType =
+            typedArray.getInt(R.styleable.PagerTabsIndicator_tab_indicator, indicatorType)
+        indicatorResource = typedArray.getResourceId(
+            R.styleable.PagerTabsIndicator_tab_indicator_resource,
+            indicatorResource
+        )
+        indicatorHeight = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_height,
+            indicatorHeight
+        )
+        indicatorBgHeight = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_bg_height,
+            indicatorBgHeight
+        )
+        indicatorMargin = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_margin,
+            indicatorMargin
+        )
+        indicatorColor =
+            typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_color, indicatorColor)
+        indicatorBgColor = typedArray.getColor(
+            R.styleable.PagerTabsIndicator_tab_indicator_bg_color,
+            indicatorBgColor
+        )
+        dividerWidth = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_divider_width,
+            dividerWidth
+        )
+        dividerMargin = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_divider_margin,
+            dividerMargin
+        )
+        dividerColor =
+            typedArray.getColor(R.styleable.PagerTabsIndicator_tab_divider_color, dividerColor)
+        dividerResource = typedArray.getResourceId(
+            R.styleable.PagerTabsIndicator_tab_divider_resource,
+            dividerResource
+        )
+        showBarIndicator = typedArray.getBoolean(
+            R.styleable.PagerTabsIndicator_tab_show_bar_indicator,
+            showBarIndicator
+        )
+        tabElevation = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_elevation,
+            tabElevation
+        )
+        indicatorScaleType = typedArray.getInt(
+            R.styleable.PagerTabsIndicator_tab_indicator_scale_type,
+            indicatorScaleType
+        )
+        isDisableTabAnimation = typedArray.getBoolean(
+            R.styleable.PagerTabsIndicator_tab_disable_animation,
+            isDisableTabAnimation
+        )
         typedArray.recycle()
     }
 
@@ -251,11 +303,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     override fun measureChildWithMargins(
-            child: View,
-            parentWidthMeasureSpec: Int,
-            widthUsed: Int,
-            parentHeightMeasureSpec: Int,
-            heightUsed: Int
+        child: View,
+        parentWidthMeasureSpec: Int,
+        widthUsed: Int,
+        parentHeightMeasureSpec: Int,
+        heightUsed: Int
     ) {
         val lp = child.layoutParams as MarginLayoutParams
         if (showBarIndicator) when (indicatorType) {
@@ -272,11 +324,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
             lp.bottomMargin = paddingBottom
         }
         super.measureChildWithMargins(
-                child,
-                parentWidthMeasureSpec,
-                widthUsed,
-                parentHeightMeasureSpec,
-                heightUsed
+            child,
+            parentWidthMeasureSpec,
+            widthUsed,
+            parentHeightMeasureSpec,
+            heightUsed
         )
     }
 
@@ -296,7 +348,10 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     private fun addTabView(view: View?, position: Int) {
-        tabsContainer.addView(view, LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT))
+        tabsContainer.addView(
+            view,
+            LinearLayout.LayoutParams(tabWidth, ViewGroup.LayoutParams.MATCH_PARENT)
+        )
         view?.setPadding(tabPadding, 0, tabPadding, 0)
         view?.setOnClickListener {
             Log.d(TAG, "tab click $position")
@@ -331,9 +386,9 @@ class PagerTabsIndicator @JvmOverloads constructor(
             if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
                 val nextTab = tabsContainer.getChildAt(position + 1)
                 indicatorRect.left =
-                        (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
+                    (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
                 indicatorRect.right =
-                        (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+                    (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
             }
         }
         when (indicatorType) {
@@ -361,7 +416,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
             if (indicatorScaleType == SCALE_CENTER_INSIDE) {
                 //Adjust the indicator bounds aspect ratio to keep the indicator resource intact
                 val ratio =
-                        (indicatorDrawable!!.intrinsicHeight / indicatorDrawable!!.intrinsicWidth).toFloat()
+                    (indicatorDrawable!!.intrinsicHeight / indicatorDrawable!!.intrinsicWidth).toFloat()
                 val scaledWidth = indicatorHeight * ratio
                 indicatorRect.left = (indicatorRect.centerX() - scaledWidth / 2).toInt()
                 indicatorRect.right = (indicatorRect.left + scaledWidth).toInt()
@@ -392,11 +447,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
                 drawable.draw(canvas)
             } ?: run {
                 canvas.drawRect(
-                        startX.toFloat(),
-                        startY.toFloat(),
-                        endX.toFloat(),
-                        endY.toFloat(),
-                        dividerPaint
+                    startX.toFloat(),
+                    startY.toFloat(),
+                    endX.toFloat(),
+                    endY.toFloat(),
+                    dividerPaint
                 )
             }
         }
@@ -405,15 +460,15 @@ class PagerTabsIndicator @JvmOverloads constructor(
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         Log.d(
-                TAG,
-                "onPageScrolled:position=" + position + ";positionOffset:" + positionOffset + ";tabsContainer child count:" + tabsContainer.childCount
+            TAG,
+            "onPageScrolled:position=" + position + ";positionOffset:" + positionOffset + ";tabsContainer child count:" + tabsContainer.childCount
         )
         this.position = position
         this.positionOffset = positionOffset
         if (targetPosition == -1 && tabsContainer.childCount > position) {
             scrollToChild(
-                    position,
-                    (positionOffset * tabsContainer.getChildAt(position).width).toInt()
+                position,
+                (positionOffset * tabsContainer.getChildAt(position).width).toInt()
             )
         }
         val targetPosition = (position + positionOffset).roundToInt()
@@ -475,12 +530,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
             lastScrollX = newScrollX
             scrollTo(newScrollX, 0)
         }
-    }
-
-    fun refresh() {
-        Log.d(TAG, "refresh")
-        tabWidth = LayoutParams.WRAP_CONTENT
-        invalidateViews()
     }
 
     fun setHeight(height: Int): PagerTabsIndicator {

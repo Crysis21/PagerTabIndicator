@@ -1,6 +1,7 @@
 package com.hold1.pagertabsindicator.adapters
 
 import android.content.Context
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
@@ -34,11 +35,11 @@ abstract class TabsAdapter(val context: Context) {
         textView.text = text
         textView.gravity = Gravity.CENTER
         textView.setSingleLine()
-//        pagerTabsIndicator?.let {
-//            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (it.textSize).toFloat())
-//            textView.setTextColor(it.textColor)
-//
-//        }
+        pagerTabsIndicator?.let {
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, (it.textSize).toFloat())
+            textView.setTextColor(it.textColor)
+
+        }
 //        return object : TabView(this@PagerTabsIndicator.context, textView) {
 //            override fun onOffset(offset: Float) {
 //                super.onOffset(offset)

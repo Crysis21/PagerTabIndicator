@@ -20,8 +20,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ViewPagerActivity"/>
-        <activity android:name=".ViewPager2Activity"/>
+        <activity android:name=".ViewPagerActivity" android:exported="true"/>
+        <activity android:name=".ViewPager2Activity" android:exported="true"/>
     </application>
 
 </manifest>

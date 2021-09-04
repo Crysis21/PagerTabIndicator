@@ -18,7 +18,6 @@ import com.hold1.pagertabsindicator.PagerTabsIndicator
 import com.hold1.pagertabsindicator.TabViewProvider
 import com.hold1.pagertabsindicator.TabViewProvider.ViewResource
 import com.hold1.pagertabsindicator.adapters.ViewPagerTabsAdapter
-import java.util.*
 
 class ViewPagerActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
@@ -53,8 +52,8 @@ class ViewPagerActivity : AppCompatActivity() {
         viewTextAdapter = TextAdapter(supportFragmentManager)
         viewImageAdapter = ImageAdapter(supportFragmentManager)
         webImageAdapter = WebImageAdapter(supportFragmentManager)
-        viewCustomAdapter = AdapterResource(supportFragmentManager)
-        viewCustomAnimAdapter = AnimAdapterResource(supportFragmentManager)
+        viewCustomAdapter = CustomViewAdapter(supportFragmentManager)
+        viewCustomAnimAdapter = CustomAnimationAdapter(supportFragmentManager)
 
         binding.viewPager.adapter = viewCustomAdapter
         tabsIndicator.setAdapter(ViewPagerTabsAdapter(binding.viewPager))
@@ -140,9 +139,10 @@ class ViewPagerActivity : AppCompatActivity() {
 
         override fun getTabIconUri(position: Int): Uri? {
             val fragment = demoFragments[position]
-            return if (fragment is FragmentPresenter) {
-                Uri.parse((fragment as FragmentPresenter).tabImageUrl)
-            } else Uri.parse("https://icons8.github.io/flat-color-icons/svg/opened_folder.svg")
+            return Uri.parse(
+                (fragment as? FragmentPresenter)?.tabImageUrl
+                    ?: "https://icons8.github.io/flat-color-icons/svg/opened_folder.svg"
+            )
         }
 
         override fun getTabIconResId(position: Int): Int {
@@ -170,7 +170,7 @@ class ViewPagerActivity : AppCompatActivity() {
         }
     }
 
-    internal inner class AdapterResource(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+    internal inner class CustomViewAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
         ViewResource {
         override fun getItem(position: Int): Fragment {
             return demoFragments[position]
@@ -194,7 +194,7 @@ class ViewPagerActivity : AppCompatActivity() {
         }
     }
 
-    internal inner class AnimAdapterResource(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+    internal inner class CustomAnimationAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
         ViewResource {
         override fun getItem(position: Int): Fragment {
             return demoFragments[position]

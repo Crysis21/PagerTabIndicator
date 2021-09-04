@@ -37,7 +37,6 @@ class ColorsFragment : Fragment(), FragmentPresenter {
                 R.id.color_bg -> tabsIndicator?.setBackgroundColor(binding.colorPickerView.selectedColor)
                 R.id.highlight_color -> tabsIndicator?.highlightTextColor = binding.colorPickerView.selectedColor
             }
-            tabsIndicator!!.refresh()
         }
         for (i in 0 until binding.elements.childCount) binding.elements.getChildAt(i).setOnClickListener(colorClick)
     }
