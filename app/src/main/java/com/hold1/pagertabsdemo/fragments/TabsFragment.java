@@ -79,7 +79,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         textSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setTextSize(progress).refresh();
+                tabsIndicator.setTextSize(progress);
             }
 
             @Override
@@ -95,7 +95,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         tabPadding.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setTabPadding(progress).refresh();
+                tabsIndicator.setTabPadding(progress);
             }
 
             @Override
@@ -111,7 +111,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         tabElevation.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setTabElevation(progress).refresh();
+                tabsIndicator.setTabElevation(progress);
             }
 
             @Override
@@ -127,7 +127,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         indicatorHeight.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setIndicatorHeight(progress).refresh();
+                tabsIndicator.setIndicatorHeight(progress);
             }
 
             @Override
@@ -144,7 +144,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         indicatorBgHeight.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setIndicatorBgHeight(progress).refresh();
+                tabsIndicator.setIndicatorBgHeight(progress);
             }
 
             @Override
@@ -161,7 +161,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         indicatorMargin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setIndicatorMargin(progress).refresh();
+                tabsIndicator.setIndicatorMargin(progress);
             }
 
             @Override
@@ -178,7 +178,7 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         lockExpanded.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tabsIndicator.setLockExpanded(isChecked).refresh();
+                tabsIndicator.setLockExpanded(isChecked);
             }
         });
 
@@ -186,9 +186,9 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.bar_top) {
-                    tabsIndicator.setIndicatorType(PagerTabsIndicator.TAB_INDICATOR_TOP).refresh();
+                    tabsIndicator.setIndicatorType(PagerTabsIndicator.TAB_INDICATOR_TOP);
                 } else {
-                    tabsIndicator.setIndicatorType(PagerTabsIndicator.TAB_INDICATOR_BOTTOM).refresh();
+                    tabsIndicator.setIndicatorType(PagerTabsIndicator.TAB_INDICATOR_BOTTOM);
                 }
             }
         });
@@ -202,14 +202,15 @@ public class TabsFragment extends Fragment implements FragmentPresenter {
         showBarIndicator.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tabsIndicator.setShowBarIndicator(isChecked).refresh();
+                tabsIndicator.setShowBarIndicator(isChecked);
             }
         });
 
         highlightText.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tabsIndicator.setHighlightText(true).setHighlightTextColor(Color.RED).refresh();
+                tabsIndicator.setHighlightText(true);
+                tabsIndicator.setHighlightTextColor(Color.RED);
             }
         });
     }

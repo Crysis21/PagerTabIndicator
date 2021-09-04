@@ -40,19 +40,48 @@ class PagerTabsIndicator @JvmOverloads constructor(
         fun onItemReselected(position: Int)
     }
 
+    private var adapter: TabsAdapter? = null
     var onItemSelectedListener: OnItemSelectedListener? = null
     var onItemReselectedListener: OnItemReselectedListener? = null
-    private var adapter: TabsAdapter? = null
 
     private var tabsContainer: LinearLayout = LinearLayout(context)
-    private var indicatorType = TAB_INDICATOR_BOTTOM
-    private var indicatorHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_height)
-    private var indicatorBgHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
-    private var indicatorMargin = 0
-    private var indicatorColor = resources.getColor(R.color.tab_indicator_color)
-    private var indicatorBgColor = resources.getColor(R.color.tab_indicator_bg_color)
-    private var indicatorDrawable: Drawable? = null
-    private var indicatorResource = -1
+
+    var indicatorType = TAB_INDICATOR_BOTTOM
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_height)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorBgHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorMargin = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorColor = resources.getColor(R.color.tab_indicator_color)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorBgColor = resources.getColor(R.color.tab_indicator_bg_color)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorDrawable: Drawable? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorResource = -1
         @SuppressLint("UseCompatLoadingForDrawables")
         set(value) {
             field = value
@@ -62,7 +91,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
                 resources.getDrawable(value)
             }
         }
-    private var indicatorScaleType = SCALE_CENTER_INSIDE
+    var indicatorScaleType = SCALE_CENTER_INSIDE
+        set(value) {
+            field = value
+            invalidate()
+        }
 
     private var backgroundPaint: Paint = Paint().apply {
         this.color = indicatorBgColor
@@ -80,35 +113,88 @@ class PagerTabsIndicator @JvmOverloads constructor(
         this.isAntiAlias = true
     }
 
-    private var isShowDivider = true
-    private var dividerWidth = resources.getDimensionPixelSize(R.dimen.tab_default_divider_width)
-    private var dividerMargin = resources.getDimensionPixelSize(R.dimen.tab_default_divider_margin)
-    private var tabElevation = 0
+    var isShowDivider = true
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var dividerWidth = resources.getDimensionPixelSize(R.dimen.tab_default_divider_width)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var dividerMargin = resources.getDimensionPixelSize(R.dimen.tab_default_divider_margin)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var tabElevation = 0
         set(value) {
             field = value
             ViewCompat.setElevation(this, value.toFloat())
         }
-    private var dividerColor = resources.getColor(R.color.tab_default_divider_color)
+    var dividerColor = resources.getColor(R.color.tab_default_divider_color)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var dividerResource = -1
+        @SuppressLint("UseCompatLoadingForDrawables")
+        set(value) {
+            field = value
+            dividerDrawable = if (value == -1) {
+                null
+            } else {
+                resources.getDrawable(value)
+            }
+        }
+    var dividerDrawable: Drawable? = null
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var isHighlightText = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var textSize = resources.getDimensionPixelSize(R.dimen.tab_default_text_size)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var textColor = resources.getColor(R.color.tab_default_text_color)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var highlightTextColor = resources.getColor(R.color.tab_indicator_color)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var tabPadding = resources.getDimensionPixelSize(R.dimen.tab_default_padding)
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var isLockExpanded = false
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var showBarIndicator = true
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var isDisableTabAnimation = false
+        set(value) {
+            field = value
+            invalidate()
+        }
 
-    // Use this if you want a custom resource drawn in tab divider
-    private var dividerResource = -1
-    private var dividerDrawable: Drawable? = null
-
-    private var isHighlightText = false
-
-    private var textSize = resources.getDimensionPixelSize(R.dimen.tab_default_text_size)
-    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
-    private var textColor = resources.getColor(R.color.tab_default_text_color)
-
-    private var highlightTextColor = resources.getColor(R.color.tab_indicator_color)
-    private var tabPadding = resources.getDimensionPixelSize(R.dimen.tab_default_padding)
-    private var isLockExpanded = false
-    private var showBarIndicator = true
-    private var isDisableTabAnimation = false
-
-    //ViewPager data
     private var position = 0
-    private val oldPosition = 0
     private var targetPosition = -1
     private var positionOffset = 0f
     private var lastScrollX = 0
@@ -210,6 +296,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
             }
         }
     }
+
     fun setAdapter(adapter: TabsAdapter?) {
         this.adapter = adapter
         this.adapter?.pagerTabsIndicator = this
@@ -243,7 +330,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
         if (isDisableTabAnimation) {
             tab = tabsContainer.getChildAt((position + positionOffset).roundToInt())
         }
-        tab?.let { currentTab->
+        tab?.let { currentTab ->
             indicatorRect.left = currentTab.left
             indicatorRect.right = currentTab.right
         }
@@ -322,7 +409,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
         }
     }
 
-    //Listen View Pager events
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
         Log.d(
                 TAG,
@@ -349,10 +436,12 @@ class PagerTabsIndicator @JvmOverloads constructor(
         invalidate()
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageSelected(position: Int) {
         Log.d(TAG, "onPageSelected=$position")
     }
 
+    @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageScrollStateChanged(state: Int) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             if (targetPosition != -1) setTabSelected(targetPosition)
@@ -373,7 +462,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
         }
     }
 
-    fun animateToTab(position: Int) {
+    private fun animateToTab(position: Int) {
         val tabView = tabsContainer.getChildAt(position)
         if (runnable != null) {
             removeCallbacks(runnable)
@@ -393,115 +482,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
             lastScrollX = newScrollX
             scrollTo(newScrollX, 0)
         }
-    }
-
-    fun setTextSize(textSize: Int): PagerTabsIndicator {
-        this.textSize = textSize
-        return this
-    }
-
-    fun setIndicatorType(indicatorType: Int): PagerTabsIndicator {
-        this.indicatorType = indicatorType
-        return this
-    }
-
-    fun setIndicatorHeight(indicatorHeight: Int): PagerTabsIndicator {
-        this.indicatorHeight = indicatorHeight
-        return this
-    }
-
-    fun setIndicatorBgHeight(indicatorBgHeight: Int): PagerTabsIndicator {
-        this.indicatorBgHeight = indicatorBgHeight
-        return this
-    }
-
-    fun setIndicatorMargin(indicatorMargin: Int): PagerTabsIndicator {
-        this.indicatorMargin = indicatorMargin
-        return this
-    }
-
-    fun setIndicatorColor(indicatorColor: Int): PagerTabsIndicator {
-        this.indicatorColor = indicatorColor
-        return this
-    }
-
-    fun setIndicatorBgColor(indicatorBgColor: Int): PagerTabsIndicator {
-        this.indicatorBgColor = indicatorBgColor
-        return this
-    }
-
-    fun setShowDivider(showDivider: Boolean): PagerTabsIndicator {
-        isShowDivider = showDivider
-        return this
-    }
-
-    fun setDividerWidth(dividerWidth: Int): PagerTabsIndicator {
-        this.dividerWidth = dividerWidth
-        return this
-    }
-
-    fun setDividerMargin(dividerMargin: Int): PagerTabsIndicator {
-        this.dividerMargin = dividerMargin
-        return this
-    }
-
-    fun setTabElevation(tabElevation: Int): PagerTabsIndicator {
-        this.tabElevation = tabElevation
-        return this
-    }
-
-    fun setDividerColor(dividerColor: Int): PagerTabsIndicator {
-        this.dividerColor = dividerColor
-        return this
-    }
-
-    fun setTextColor(textColor: Int): PagerTabsIndicator {
-        this.textColor = textColor
-        return this
-    }
-
-    fun setTabPadding(tabPadding: Int): PagerTabsIndicator {
-        this.tabPadding = tabPadding
-        return this
-    }
-
-    fun setLockExpanded(lockExpanded: Boolean): PagerTabsIndicator {
-        isLockExpanded = lockExpanded
-        return this
-    }
-
-    fun setShowBarIndicator(showBarIndicator: Boolean): PagerTabsIndicator {
-        this.showBarIndicator = showBarIndicator
-        return this
-    }
-
-    fun setDisableTabAnimation(disableTabAnimation: Boolean): PagerTabsIndicator {
-        isDisableTabAnimation = disableTabAnimation
-        return this
-    }
-
-    fun setDividerResource(dividerResource: Int): PagerTabsIndicator {
-        if (dividerResource == -1) {
-            dividerDrawable = null
-        }
-        this.dividerResource = dividerResource
-        return this
-    }
-
-    fun setIndicatorResource(indicatorResource: Int): PagerTabsIndicator {
-        this.indicatorResource = indicatorResource
-        if (indicatorResource == -1) indicatorDrawable = null
-        return this
-    }
-
-    fun setHighlightText(highlightText: Boolean): PagerTabsIndicator {
-        isHighlightText = highlightText
-        return this
-    }
-
-    fun setHighlightTextColor(highlightTextColor: Int): PagerTabsIndicator {
-        this.highlightTextColor = highlightTextColor
-        return this
     }
 
     fun refresh() {

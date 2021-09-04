@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by Cristian Holdunu on 08/11/2017.
  */
 
-public class DividerFragment extends Fragment implements FragmentPresenter{
+public class DividerFragment extends Fragment implements FragmentPresenter {
 
 
     private PagerTabsIndicator tabsIndicator;
@@ -59,13 +59,13 @@ public class DividerFragment extends Fragment implements FragmentPresenter{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        tabsIndicator = ((MainActivity)getActivity()).getTabsIndicator();
-        if (tabsIndicator==null) return;
+        tabsIndicator = ((MainActivity) getActivity()).getTabsIndicator();
+        if (tabsIndicator == null) return;
         ButterKnife.bind(this, view);
         divWidth.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setDividerWidth(progress).refresh();
+                tabsIndicator.setDividerWidth(progress);
             }
 
             @Override
@@ -81,7 +81,7 @@ public class DividerFragment extends Fragment implements FragmentPresenter{
         divMargin.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                tabsIndicator.setDividerMargin(progress).refresh();
+                tabsIndicator.setDividerMargin(progress);
             }
 
             @Override
@@ -98,34 +98,41 @@ public class DividerFragment extends Fragment implements FragmentPresenter{
         showDivider.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                tabsIndicator.setShowDivider(isChecked).refresh();
+                tabsIndicator.setShowDivider(isChecked);
             }
         });
         solidColor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabsIndicator.setDividerResource(-1).setDividerWidth(1).refresh();
+                tabsIndicator.setDividerResource(-1);
+                tabsIndicator.setDividerWidth(1);
             }
         });
 
         divider1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabsIndicator.setDividerResource(R.drawable.ic_divider1).setDividerWidth(20).setDividerMargin(40).refresh();
+                tabsIndicator.setDividerResource(R.drawable.ic_divider1);
+                tabsIndicator.setDividerWidth(20);
+                tabsIndicator.setDividerMargin(40);
             }
         });
 
         divider2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabsIndicator.setDividerResource(R.drawable.ic_divider2).setDividerWidth(18).setDividerMargin(30).refresh();
+                tabsIndicator.setDividerResource(R.drawable.ic_divider2);
+                tabsIndicator.setDividerWidth(18);
+                tabsIndicator.setDividerMargin(30);
             }
         });
 
         divider3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tabsIndicator.setDividerResource(R.drawable.ic_divider3).setDividerWidth(40).setDividerMargin(36).refresh();
+                tabsIndicator.setDividerResource(R.drawable.ic_divider3);
+                tabsIndicator.setDividerWidth(40);
+                tabsIndicator.setDividerMargin(36);
             }
         });
 

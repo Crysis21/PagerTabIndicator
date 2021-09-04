@@ -124,11 +124,9 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case CUSTOM_ANIM:
                 viewPager.setAdapter(viewCustomAnimAdapter);
-                tabsIndicator.setShowDivider(false)
-                        .setIndicatorBgHeight(0)
-                        .setShowBarIndicator(false)
-                        .setHeight(getResources().getDimensionPixelSize(R.dimen.tab_height_min))
-                        .refresh();
+                tabsIndicator.setShowDivider(false);
+                tabsIndicator.setShowBarIndicator(false);
+                tabsIndicator.setHeight(getResources().getDimensionPixelSize(R.dimen.tab_height_min));
                 break;
         }
     }
