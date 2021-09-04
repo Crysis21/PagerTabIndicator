@@ -6,7 +6,7 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.hold1.pagertabsindicator.TabViewProvider
 
-class ViewPager2TabsAdapter(val viewPager2: ViewPager2) : TabsAdapter(viewPager2.context) {
+class ViewPager2TabsAdapter(val viewPager2: ViewPager2) : TabsAdapter() {
     private val pagerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> = viewPager2.adapter!!
 
     private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
@@ -61,34 +61,4 @@ class ViewPager2TabsAdapter(val viewPager2: ViewPager2) : TabsAdapter(viewPager2
     override fun getCount(): Int {
         return pagerAdapter.itemCount
     }
-
-    override fun getTabAt(position: Int): View {
-        return when (pagerAdapter) {
-            is TabViewProvider.ImageResource -> {
-                val imageView = createImageView()
-                pagerAdapter.getTabIconUri(position)?.let { uri ->
-                    Glide.with(context)
-                        .load(uri)
-                        .into(imageView)
-                } ?: run {
-                    imageView.setImageResource(
-                        (pagerAdapter as TabViewProvider.ImageResource).getTabIconResId(
-                            position
-                        )
-                    )
-                }
-                imageView
-            }
-            is TabViewProvider.ViewResource -> {
-                pagerAdapter.getTabView(position)
-            }
-            is TabViewProvider.TextResource -> {
-                createTextView(pagerAdapter.getTabTitle(position))
-            }
-            else -> {
-                throw NotImplementedError("Can't generate a view tab")
-            }
-        }
-    }
-
 }

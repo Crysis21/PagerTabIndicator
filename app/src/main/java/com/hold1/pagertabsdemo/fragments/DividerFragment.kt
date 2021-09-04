@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.fragment.app.Fragment
-import com.hold1.pagertabsdemo.ViewPagerActivity
+import com.hold1.pagertabsdemo.TabbedActivity
 import com.hold1.pagertabsdemo.R
 import com.hold1.pagertabsdemo.databinding.DividerFragmentBinding
 import com.hold1.pagertabsindicator.PagerTabsIndicator
@@ -27,7 +27,7 @@ class DividerFragment : Fragment(), FragmentPresenter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tabsIndicator = (activity as? ViewPagerActivity)?.tabsIndicator
+        tabsIndicator = (activity as? TabbedActivity)?.tabsIndicator
         binding.divWidth.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 tabsIndicator!!.dividerWidth = progress

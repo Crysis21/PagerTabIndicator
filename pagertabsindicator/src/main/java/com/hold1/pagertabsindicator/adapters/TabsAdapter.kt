@@ -6,18 +6,55 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.hold1.pagertabsindicator.PagerTabsIndicator
+import com.hold1.pagertabsindicator.TabViewProvider
 
-abstract class TabsAdapter(val context: Context) {
+abstract class TabsAdapter() {
+
+    private var context: Context? = null
 
     var pagerTabsIndicator: PagerTabsIndicator? = null
         set(value) {
             field = value
+            context = value?.context
             onAttachedToTabsIndicator()
         }
 
+    var tabViewProvider: TabViewProvider? = null
+    set(value) {
+        field = value
+        pagerTabsIndicator?.invalidateViews()
+    }
+
     abstract fun getCount(): Int
-    abstract fun getTabAt(position: Int): View
+
+    fun getTabAt(position: Int): View {
+        tabViewProvider?.let { viewProvider ->
+            when (viewProvider) {
+                is TabViewProvider.ImageResource -> {
+                    val imageView = createImageView()
+                    viewProvider.getTabIconUri(position)?.let { uri ->
+                        context?.let {
+                            Glide.with(it)
+                                .load(uri)
+                                .into(imageView)
+                        }
+                    } ?: run {
+                        imageView.setImageResource(viewProvider.getTabIconResId(position))
+                    }
+                    return@getTabAt imageView
+                }
+                is TabViewProvider.ViewResource -> {
+                    return@getTabAt viewProvider.getTabView(position)
+                }
+                is TabViewProvider.TextResource -> {
+                    return@getTabAt createTextView(viewProvider.getTabTitle(position))
+                }
+            }
+        }
+        throw NotImplementedError("TabViewProvider not set to adapter")
+    }
 
     private fun onAttachedToTabsIndicator() {
         pagerTabsIndicator?.invalidateViews()

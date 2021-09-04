@@ -15,11 +15,19 @@ import com.hold1.pagertabsdemo.fragments.*
 import com.hold1.pagertabsindicator.PagerTabsIndicator
 import com.hold1.pagertabsindicator.TabViewProvider
 import com.hold1.pagertabsindicator.adapters.ViewPager2TabsAdapter
+import com.hold1.pagertabsindicator.adapters.ViewPagerTabsAdapter
 
-class ViewPager2Activity : AppCompatActivity() {
+class ViewPager2Activity : AppCompatActivity(), TabbedActivity {
 
     private lateinit var binding: ActivityViewpager2Binding
     private val demoFragments = mutableListOf<Fragment>()
+    private var viewPagerTabsAdapter: ViewPager2TabsAdapter? = null
+
+    //Just for easing the demo :)
+    override val tabsIndicator: PagerTabsIndicator
+        get() {
+            return binding.tabsIndicator
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,15 +40,17 @@ class ViewPager2Activity : AppCompatActivity() {
         demoFragments.add(AdaptersFragment())
         demoFragments.add(ContactFragment())
 
+        binding.viewPager.adapter = DemoPagerAdapter(this)
 
-        binding.viewPager.adapter = TextAdapter(this)
-        binding.tabsIndicator.setAdapter(ViewPager2TabsAdapter(binding.viewPager))
+        viewPagerTabsAdapter = ViewPager2TabsAdapter(binding.viewPager)
+        viewPagerTabsAdapter?.tabViewProvider = viewProvider
+
+        binding.tabsIndicator.setAdapter(viewPagerTabsAdapter)
         binding.tabsIndicator.onItemSelectedListener = object: PagerTabsIndicator.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
                 binding.viewPager.setCurrentItem(position, true)
             }
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -51,31 +61,26 @@ class ViewPager2Activity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.text -> changeTabAdapter(ViewPagerActivity.TabAdapterType.TEXT)
-            R.id.image -> changeTabAdapter(ViewPagerActivity.TabAdapterType.IMAGE)
-            R.id.web -> changeTabAdapter(ViewPagerActivity.TabAdapterType.WEB)
-            R.id.custom -> changeTabAdapter(ViewPagerActivity.TabAdapterType.CUSTOM)
-            R.id.custom_anim -> changeTabAdapter(ViewPagerActivity.TabAdapterType.CUSTOM_ANIM)
+            R.id.text -> changeTabAdapter(TabbedActivity.TabAdapterType.TEXT)
+            R.id.image -> changeTabAdapter(TabbedActivity.TabAdapterType.IMAGE)
+            R.id.web -> changeTabAdapter(TabbedActivity.TabAdapterType.WEB)
+            R.id.custom -> changeTabAdapter(TabbedActivity.TabAdapterType.CUSTOM)
+            R.id.custom_anim -> changeTabAdapter(TabbedActivity.TabAdapterType.CUSTOM_ANIM)
         }
         return true
     }
 
-    fun changeTabAdapter(adapterType: ViewPagerActivity.TabAdapterType?) {
+    override fun changeTabAdapter(adapterType: TabbedActivity.TabAdapterType?) {
         when (adapterType) {
-            ViewPagerActivity.TabAdapterType.TEXT -> binding.viewPager.adapter = TextAdapter(this)
-            ViewPagerActivity.TabAdapterType.IMAGE -> binding.viewPager.adapter = ImageAdapter(this)
-            ViewPagerActivity.TabAdapterType.CUSTOM -> binding.viewPager.adapter = CustomViewAdapter(this)
-//            ViewPagerActivity.TabAdapterType.CUSTOM_ANIM -> {
-//                binding.viewPager.adapter = viewCustomAnimAdapter
-//                binding.tabsIndicator.isShowDivider = false
-//                binding.tabsIndicator.showBarIndicator = false
-//                binding.tabsIndicator.height =
-//                    resources.getDimensionPixelSize(R.dimen.tab_height_min)
-//            }
+            TabbedActivity.TabAdapterType.TEXT -> viewPagerTabsAdapter?.tabViewProvider = textProvider
+            TabbedActivity.TabAdapterType.IMAGE -> viewPagerTabsAdapter?.tabViewProvider = imageProvider
+            TabbedActivity.TabAdapterType.WEB -> viewPagerTabsAdapter?.tabViewProvider = webImageProvider
+            TabbedActivity.TabAdapterType.CUSTOM -> viewPagerTabsAdapter?.tabViewProvider = viewProvider
+            TabbedActivity.TabAdapterType.CUSTOM_ANIM -> viewPagerTabsAdapter?.tabViewProvider = customAnimationProvider
         }
-        binding.tabsIndicator.setAdapter(ViewPager2TabsAdapter(binding.viewPager))
     }
-    inner class TextAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity), TabViewProvider.TextResource {
+
+    inner class DemoPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity), TabViewProvider.TextResource {
 
         override fun getItemCount(): Int {
             return demoFragments.size
@@ -91,18 +96,24 @@ class ViewPager2Activity : AppCompatActivity() {
     }
 
 
-    inner class ImageAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity), TabViewProvider.ImageResource {
-
-        override fun getItemCount(): Int {
-            return demoFragments.size
-        }
-
-        override fun createFragment(position: Int): Fragment {
-            return demoFragments[position]
-        }
-
+    private val imageProvider = object : TabViewProvider.ImageResource {
         override fun getTabIconUri(position: Int): Uri? {
             return null
+        }
+
+        override fun getTabIconResId(position: Int): Int {
+            return (demoFragments[position] as? FragmentPresenter)?.tabImage
+                ?: R.drawable.ic_add_shopping_cart_black_24dp
+        }
+    }
+
+    private val webImageProvider = object : TabViewProvider.ImageResource {
+        override fun getTabIconUri(position: Int): Uri? {
+            val fragment = demoFragments[position]
+            return Uri.parse(
+                (fragment as? FragmentPresenter)?.tabImageUrl
+                    ?: "https://icons8.github.io/flat-color-icons/svg/opened_folder.svg"
+            )
         }
 
         override fun getTabIconResId(position: Int): Int {
@@ -113,16 +124,16 @@ class ViewPager2Activity : AppCompatActivity() {
         }
     }
 
-    inner class CustomViewAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity), TabViewProvider.ViewResource {
 
-        override fun getItemCount(): Int {
-            return demoFragments.size
+    private val textProvider = object : TabViewProvider.TextResource {
+
+        override fun getTabTitle(position: Int): String {
+            return (demoFragments[position] as? FragmentPresenter)?.tabName ?: "Tab $position"
         }
+    }
 
-        override fun createFragment(position: Int): Fragment {
-            return demoFragments[position]
-        }
 
+    private val viewProvider = object : TabViewProvider.ViewResource {
         override fun getTabView(position: Int): View {
             val fragment = demoFragments[position]
             if (fragment is FragmentPresenter) {
@@ -135,5 +146,26 @@ class ViewPager2Activity : AppCompatActivity() {
             }
             throw NotImplementedError("Improper implementation of CustomView adapter")
         }
+    }
+
+    private val customAnimationProvider = object : TabViewProvider.ViewResource {
+
+        override fun getTabView(position: Int): View {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                TabItemView(
+                    applicationContext,
+                    (fragment as FragmentPresenter).tabName,
+                    (fragment as FragmentPresenter).tabImage,
+                    -0xc9c9ca,
+                    -0x10000
+                )
+            } else throw NotImplementedError("Improper implementation of CustomView adapter")
+        }
+    }
+
+    override fun addDummyTab() {
+        demoFragments.add(DemoFragment())
+        binding.viewPager.adapter?.notifyDataSetChanged()
     }
 }

@@ -1,14 +1,10 @@
 package com.hold1.pagertabsindicator.adapters
 
 import android.database.DataSetObserver
-import android.util.Log
-import android.view.View
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
-import com.hold1.pagertabsindicator.TabViewProvider
 
-class ViewPagerTabsAdapter(viewPager: ViewPager) : TabsAdapter(viewPager.context), ViewPager.OnPageChangeListener {
+class ViewPagerTabsAdapter(viewPager: ViewPager) : TabsAdapter(), ViewPager.OnPageChangeListener {
     private var adapter: PagerAdapter? = null
 
     private var adapterChangeListener: ViewPager.OnAdapterChangeListener = ViewPager.OnAdapterChangeListener { _, _, newAdapter ->
@@ -36,35 +32,6 @@ class ViewPagerTabsAdapter(viewPager: ViewPager) : TabsAdapter(viewPager.context
 
     override fun getCount(): Int {
         return adapter?.count ?: 0
-    }
-
-    override fun getTabAt(position: Int): View {
-        Log.d("TabViewProvider", "getTabAt $position adapter=$adapter")
-        adapter?.let { pagerAdapter ->
-            when (pagerAdapter) {
-                is TabViewProvider.ImageResource -> {
-                    val imageView = createImageView()
-                    pagerAdapter.getTabIconUri(position)?.let { uri ->
-                        Glide.with(context)
-                            .load(uri)
-                            .into(imageView)
-                    } ?: run {
-                        imageView.setImageResource(pagerAdapter.getTabIconResId(position))
-                    }
-                    return@getTabAt imageView
-                }
-                is TabViewProvider.ViewResource -> {
-                    return@getTabAt pagerAdapter.getTabView(position)
-                }
-                is TabViewProvider.TextResource -> {
-                    return@getTabAt createTextView(pagerAdapter.getTabTitle(position))
-                }
-                else -> {
-                    return@getTabAt createTextView(pagerAdapter.getPageTitle(position).toString())
-                }
-            }
-        }
-        throw NotImplementedError("Adapter is null")
     }
 
     override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {

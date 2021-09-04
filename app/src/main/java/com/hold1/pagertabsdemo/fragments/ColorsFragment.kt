@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hold1.pagertabsdemo.ViewPagerActivity
+import com.hold1.pagertabsdemo.TabbedActivity
 import com.hold1.pagertabsdemo.R
 import com.hold1.pagertabsdemo.databinding.ColorsFragmentBinding
 import com.hold1.pagertabsindicator.PagerTabsIndicator
@@ -27,7 +27,7 @@ class ColorsFragment : Fragment(), FragmentPresenter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tabsIndicator = (activity as? ViewPagerActivity)?.tabsIndicator
+        tabsIndicator = (activity as? TabbedActivity)?.tabsIndicator
         colorClick = View.OnClickListener { v ->
             when (v.id) {
                 R.id.color_text -> tabsIndicator?.textColor = binding.colorPickerView.selectedColor

@@ -22,7 +22,7 @@ class JetpackNavigationActivity : AppCompatActivity() {
         setContentView(binding.root)
         navController = findNavController(R.id.nav_host)
 
-        binding.tabsIndicator.setAdapter(TabsAdapterImpl(this))
+//        binding.tabsIndicator.setAdapter(TabsAdapterImpl(this))
     }
 
     class TextProvider: TabViewProvider.TextResource {
@@ -30,14 +30,14 @@ class JetpackNavigationActivity : AppCompatActivity() {
             return "tab"
         }
     }
-
-    inner class TabsAdapterImpl(context: Context) : TabsAdapter(context) {
-        override fun getCount(): Int {
-            return 5
-        }
-
-        override fun getTabAt(position: Int): View {
-            tabViewProvider
-        }
-    }
+//
+//    inner class TabsAdapterImpl(context: Context) : TabsAdapter(context) {
+//        override fun getCount(): Int {
+//            return 5
+//        }
+//
+//        override fun getTabAt(position: Int): View {
+//            tabViewProvider
+//        }
+//    }
 }

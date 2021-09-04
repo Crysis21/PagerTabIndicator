@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.hold1.pagertabsdemo.ViewPagerActivity
+import com.hold1.pagertabsdemo.TabbedActivity
 import com.hold1.pagertabsdemo.R
 import com.hold1.pagertabsdemo.databinding.AdaptersFragmentBinding
 import com.hold1.pagertabsindicator.PagerTabsIndicator
@@ -25,12 +25,12 @@ class AdaptersFragment : Fragment(), FragmentPresenter {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        tabsIndicator = (activity as? ViewPagerActivity)?.tabsIndicator
-        binding.tabsText.setOnClickListener { (activity as? ViewPagerActivity)?.changeTabAdapter(ViewPagerActivity.TabAdapterType.TEXT) }
-        binding.tabsImage.setOnClickListener { (activity as? ViewPagerActivity)?.changeTabAdapter(ViewPagerActivity.TabAdapterType.IMAGE) }
-        binding.tabsWeb.setOnClickListener { (activity as? ViewPagerActivity)?.changeTabAdapter(ViewPagerActivity.TabAdapterType.WEB) }
-        binding.tabsCustom.setOnClickListener { (activity as? ViewPagerActivity)?.changeTabAdapter(ViewPagerActivity.TabAdapterType.CUSTOM) }
-        binding.tabsCustomAnim.setOnClickListener { (activity as? ViewPagerActivity)?.changeTabAdapter(ViewPagerActivity.TabAdapterType.CUSTOM_ANIM) }
+        tabsIndicator = (activity as? TabbedActivity)?.tabsIndicator
+        binding.tabsText.setOnClickListener { (activity as? TabbedActivity)?.changeTabAdapter(TabbedActivity.TabAdapterType.TEXT) }
+        binding.tabsImage.setOnClickListener { (activity as? TabbedActivity)?.changeTabAdapter(TabbedActivity.TabAdapterType.IMAGE) }
+        binding.tabsWeb.setOnClickListener { (activity as? TabbedActivity)?.changeTabAdapter(TabbedActivity.TabAdapterType.WEB) }
+        binding.tabsCustom.setOnClickListener { (activity as? TabbedActivity)?.changeTabAdapter(TabbedActivity.TabAdapterType.CUSTOM) }
+        binding.tabsCustomAnim.setOnClickListener { (activity as? TabbedActivity)?.changeTabAdapter(TabbedActivity.TabAdapterType.CUSTOM_ANIM) }
     }
 
     override val tabName: String = "Adapters"
