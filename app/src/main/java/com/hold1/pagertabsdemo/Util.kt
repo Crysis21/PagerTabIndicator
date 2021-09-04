@@ -1,33 +1,31 @@
-package com.hold1.pagertabsdemo;
+package com.hold1.pagertabsdemo
 
-import android.graphics.Color;
+import android.graphics.Color
 
 /**
  * Created by Cristian Holdunu on 20/11/2017.
  */
-
-public class Util {
-    public static int getColorWithOpacity(int color, int opacity) {
-        return Color.argb(opacity * 255 / 100, Color.red(color), Color.green(color), Color.blue(color));
+object Util {
+    @JvmStatic
+    fun getColorWithOpacity(color: Int, opacity: Int): Int {
+        return Color.argb(opacity * 255 / 100, Color.red(color), Color.green(color), Color.blue(color))
     }
 
-    public static int mixTwoColors(int color1, int color2, float amount) {
-        final byte ALPHA_CHANNEL = 24;
-        final byte RED_CHANNEL = 16;
-        final byte GREEN_CHANNEL = 8;
-        final byte BLUE_CHANNEL = 0;
-
-        final float inverseAmount = 1.0f - amount;
-
-        int a = ((int) (((float) (color1 >> ALPHA_CHANNEL & 0xff) * amount) +
-                ((float) (color2 >> ALPHA_CHANNEL & 0xff) * inverseAmount))) & 0xff;
-        int r = ((int) (((float) (color1 >> RED_CHANNEL & 0xff) * amount) +
-                ((float) (color2 >> RED_CHANNEL & 0xff) * inverseAmount))) & 0xff;
-        int g = ((int) (((float) (color1 >> GREEN_CHANNEL & 0xff) * amount) +
-                ((float) (color2 >> GREEN_CHANNEL & 0xff) * inverseAmount))) & 0xff;
-        int b = ((int) (((float) (color1 & 0xff) * amount) +
-                ((float) (color2 & 0xff) * inverseAmount))) & 0xff;
-
-        return a << ALPHA_CHANNEL | r << RED_CHANNEL | g << GREEN_CHANNEL | b << BLUE_CHANNEL;
+    @JvmStatic
+    fun mixTwoColors(color1: Int, color2: Int, amount: Float): Int {
+        val ALPHA_CHANNEL: Byte = 24
+        val RED_CHANNEL: Byte = 16
+        val GREEN_CHANNEL: Byte = 8
+        val BLUE_CHANNEL: Byte = 0
+        val inverseAmount = 1.0f - amount
+        val a = ((color1 shr ALPHA_CHANNEL.toInt() and 0xff).toFloat() * amount +
+                (color2 shr ALPHA_CHANNEL.toInt() and 0xff).toFloat() * inverseAmount).toInt() and 0xff
+        val r = ((color1 shr RED_CHANNEL.toInt() and 0xff).toFloat() * amount +
+                (color2 shr RED_CHANNEL.toInt() and 0xff).toFloat() * inverseAmount).toInt() and 0xff
+        val g = ((color1 shr GREEN_CHANNEL.toInt() and 0xff).toFloat() * amount +
+                (color2 shr GREEN_CHANNEL.toInt() and 0xff).toFloat() * inverseAmount).toInt() and 0xff
+        val b = ((color1 and 0xff).toFloat() * amount +
+                (color2 and 0xff).toFloat() * inverseAmount).toInt() and 0xff
+        return a shl ALPHA_CHANNEL.toInt() or (r shl RED_CHANNEL.toInt()) or (g shl GREEN_CHANNEL.toInt()) or (b shl BLUE_CHANNEL.toInt())
     }
 }

@@ -1,305 +1,222 @@
-package com.hold1.pagertabsdemo;
+package com.hold1.pagertabsdemo
 
-import android.net.Uri;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.net.Uri
+import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.PagerAdapter
+import com.hold1.pagertabsdemo.databinding.ActivityMainBinding
+import com.hold1.pagertabsdemo.fragments.*
+import com.hold1.pagertabsindicator.PagerTabsIndicator
+import com.hold1.pagertabsindicator.TabViewProvider
+import com.hold1.pagertabsindicator.TabViewProvider.CustomView
+import com.hold1.pagertabsindicator.ViewPagerTabsAdapter
+import java.util.*
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
-import com.hold1.pagertabsdemo.fragments.AdaptersFragment;
-import com.hold1.pagertabsdemo.fragments.ColorsFragment;
-import com.hold1.pagertabsdemo.fragments.ContactFragment;
-import com.hold1.pagertabsdemo.fragments.DemoFragment;
-import com.hold1.pagertabsdemo.fragments.DividerFragment;
-import com.hold1.pagertabsdemo.fragments.FragmentPresenter;
-import com.hold1.pagertabsdemo.fragments.TabsFragment;
-import com.hold1.pagertabsindicator.PagerTabsIndicator;
-import com.hold1.pagertabsindicator.TabViewProvider;
-import com.hold1.pagertabsindicator.ViewPagerTabsAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity {
-
-    private ViewPager viewPager;
-    private PagerTabsIndicator tabsIndicator;
-    private PagerAdapter viewImageAdapter;
-    private PagerAdapter webImageAdapter;
-    private PagerAdapter viewCustomAdapter;
-    private PagerAdapter viewCustomAnimAdapter;
-    private PagerAdapter viewTextAdapter;
-
-    private List<Fragment> demoFragments = new ArrayList<>();
-
-    public enum TabAdapterType {
-        TEXT,
-        IMAGE,
-        WEB,
-        CUSTOM,
-        CUSTOM_ANIM
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        viewPager = findViewById(R.id.view_pager);
-        tabsIndicator = findViewById(R.id.tabs_indicator);
-
-        demoFragments.add(new TabsFragment());
-        demoFragments.add(new DividerFragment());
-        demoFragments.add(new ColorsFragment());
-        demoFragments.add(new AdaptersFragment());
-        demoFragments.add(new ContactFragment());
-
-        viewTextAdapter = new TextAdapter(getSupportFragmentManager());
-        viewImageAdapter = new ImageAdapter(getSupportFragmentManager());
-        webImageAdapter = new WebImageAdapter(getSupportFragmentManager());
-        viewCustomAdapter = new CustomAdapter(getSupportFragmentManager());
-        viewCustomAnimAdapter = new CustomAnimAdapter(getSupportFragmentManager());
-
-        viewPager.setAdapter(viewCustomAdapter);
-        tabsIndicator.setAdapter(new ViewPagerTabsAdapter(viewPager));
-        tabsIndicator.setOnItemSelectedListener(position -> {
-            viewPager.setCurrentItem(position, true);
-        });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.text:
-                changeTabAdapter(TabAdapterType.TEXT);
-                break;
-            case R.id.image:
-                changeTabAdapter(TabAdapterType.IMAGE);
-                break;
-            case R.id.web:
-                changeTabAdapter(TabAdapterType.WEB);
-                break;
-            case R.id.custom:
-                changeTabAdapter(TabAdapterType.CUSTOM);
-                break;
-            case R.id.custom_anim:
-                changeTabAdapter(TabAdapterType.CUSTOM_ANIM);
-                break;
-        }
-        return true;
-    }
-
-    public void changeTabAdapter(TabAdapterType adapterType) {
-        viewPager.removeAllViews();
-        switch (adapterType) {
-            case TEXT:
-                viewPager.setAdapter(viewTextAdapter);
-                break;
-            case IMAGE:
-                viewPager.setAdapter(viewImageAdapter);
-                break;
-            case WEB:
-                viewPager.setAdapter(webImageAdapter);
-                break;
-            case CUSTOM:
-                viewPager.setAdapter(viewCustomAdapter);
-                break;
-            case CUSTOM_ANIM:
-                viewPager.setAdapter(viewCustomAnimAdapter);
-                tabsIndicator.setShowDivider(false);
-                tabsIndicator.setShowBarIndicator(false);
-                tabsIndicator.setHeight(getResources().getDimensionPixelSize(R.dimen.tab_height_min));
-                break;
-        }
-    }
-
-    class ImageAdapter extends FragmentPagerAdapter implements TabViewProvider.ImageProvider {
-
-        public ImageAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return demoFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return demoFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Tab " + position;
-        }
-
-        @Override
-        public Uri getImageUri(int position) {
-            return null;
-        }
-
-        @Override
-        public int getImageResourceId(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                return ((FragmentPresenter) fragment).getTabImage();
-            }
-            return R.drawable.ic_add_shopping_cart_black_24dp;
-        }
-    }
-
-
-    class WebImageAdapter extends FragmentPagerAdapter implements TabViewProvider.ImageProvider {
-
-        public WebImageAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return demoFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return demoFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return "Tab " + position;
-        }
-
-        @Override
-        public Uri getImageUri(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                return Uri.parse(((FragmentPresenter) fragment).getTabImageUrl());
-            }
-            return Uri.parse("https://icons8.github.io/flat-color-icons/svg/opened_folder.svg");
-        }
-
-        @Override
-        public int getImageResourceId(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                return ((FragmentPresenter) fragment).getTabImage();
-            }
-            return R.drawable.ic_add_shopping_cart_black_24dp;
-        }
-    }
-
-    class TextAdapter extends FragmentPagerAdapter {
-
-        public TextAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return demoFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return demoFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                return ((FragmentPresenter) fragment).getTabName();
-            }
-            return "Tab " + position;
-        }
-    }
-
-
-    class CustomAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView {
-
-        public CustomAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return demoFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return demoFragments.size();
-        }
-
-        @Override
-        public View getView(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                View view = getLayoutInflater().inflate(R.layout.tab_item, null);
-                TextView title = view.findViewById(R.id.tab_name);
-                title.setText(((FragmentPresenter) fragment).getTabName());
-                ImageView icon = view.findViewById(R.id.tab_icon);
-                icon.setImageResource(((FragmentPresenter) fragment).getTabImage());
-                return view;
-            }
-            return null;
-        }
-    }
-
-
-    class CustomAnimAdapter extends FragmentPagerAdapter implements TabViewProvider.CustomView {
-
-        public CustomAnimAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return demoFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return demoFragments.size();
-        }
-
-        @Override
-        public View getView(int position) {
-            Fragment fragment = demoFragments.get(position);
-            if (fragment instanceof FragmentPresenter) {
-                return new TabItemView(getApplicationContext(), ((FragmentPresenter) fragment).getTabName(), ((FragmentPresenter) fragment).getTabImage(), 0xFF363636, 0xFFFF0000);
-            }
-            return null;
-        }
-    }
+class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
 
     //Just for easing the demo :)
-    public PagerTabsIndicator getTabsIndicator() {
-        return tabsIndicator;
+    var tabsIndicator: PagerTabsIndicator = binding.tabsIndicator
+        private set
+    private var viewImageAdapter: PagerAdapter? = null
+    private var webImageAdapter: PagerAdapter? = null
+    private var viewCustomAdapter: PagerAdapter? = null
+    private var viewCustomAnimAdapter: PagerAdapter? = null
+    private var viewTextAdapter: PagerAdapter? = null
+    private val demoFragments: MutableList<Fragment> = ArrayList()
+
+    enum class TabAdapterType {
+        TEXT, IMAGE, WEB, CUSTOM, CUSTOM_ANIM
     }
 
-    public void addDummyTab() {
-        demoFragments.add(new DemoFragment());
-        viewPager.getAdapter().notifyDataSetChanged();
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        demoFragments.add(TabsFragment())
+        demoFragments.add(DividerFragment())
+        demoFragments.add(ColorsFragment())
+        demoFragments.add(AdaptersFragment())
+        demoFragments.add(ContactFragment())
+        viewTextAdapter = TextAdapter(supportFragmentManager)
+        viewImageAdapter = ImageAdapter(supportFragmentManager)
+        webImageAdapter = WebImageAdapter(supportFragmentManager)
+        viewCustomAdapter = CustomAdapter(supportFragmentManager)
+        viewCustomAnimAdapter = CustomAnimAdapter(supportFragmentManager)
+        binding.viewPager.adapter = viewCustomAdapter
+        tabsIndicator.setAdapter(ViewPagerTabsAdapter(binding.viewPager))
+        tabsIndicator.onItemSelectedListener = object : PagerTabsIndicator.OnItemSelectedListener {
+            override fun onItemSelected(position: Int) {
+                binding.viewPager.setCurrentItem(position, true)
+            }
+
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.text -> changeTabAdapter(TabAdapterType.TEXT)
+            R.id.image -> changeTabAdapter(TabAdapterType.IMAGE)
+            R.id.web -> changeTabAdapter(TabAdapterType.WEB)
+            R.id.custom -> changeTabAdapter(TabAdapterType.CUSTOM)
+            R.id.custom_anim -> changeTabAdapter(TabAdapterType.CUSTOM_ANIM)
+        }
+        return true
+    }
+
+    fun changeTabAdapter(adapterType: TabAdapterType?) {
+        binding.viewPager.removeAllViews()
+        when (adapterType) {
+            TabAdapterType.TEXT -> binding.viewPager.adapter = viewTextAdapter
+            TabAdapterType.IMAGE -> binding.viewPager.adapter = viewImageAdapter
+            TabAdapterType.WEB -> binding.viewPager.adapter = webImageAdapter
+            TabAdapterType.CUSTOM -> binding.viewPager.adapter = viewCustomAdapter
+            TabAdapterType.CUSTOM_ANIM -> {
+                binding.viewPager.adapter = viewCustomAnimAdapter
+                binding.tabsIndicator.isShowDivider = false
+                binding.tabsIndicator.showBarIndicator = false
+                binding.tabsIndicator.height =
+                    resources.getDimensionPixelSize(R.dimen.tab_height_min)
+            }
+        }
+    }
+
+    internal inner class ImageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+        TabViewProvider.ImageProvider {
+        override fun getItem(position: Int): Fragment {
+            return demoFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return demoFragments.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return "Tab $position"
+        }
+
+        override fun getImageUri(position: Int): Uri? {
+            return null
+        }
+
+        override fun getImageResourceId(position: Int): Int {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                (fragment as FragmentPresenter).tabImage
+            } else R.drawable.ic_add_shopping_cart_black_24dp
+        }
+    }
+
+    internal inner class WebImageAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+        TabViewProvider.ImageProvider {
+        override fun getItem(position: Int): Fragment {
+            return demoFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return demoFragments.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            return "Tab $position"
+        }
+
+        override fun getImageUri(position: Int): Uri? {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                Uri.parse((fragment as FragmentPresenter).tabImageUrl)
+            } else Uri.parse("https://icons8.github.io/flat-color-icons/svg/opened_folder.svg")
+        }
+
+        override fun getImageResourceId(position: Int): Int {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                (fragment as FragmentPresenter).tabImage
+            } else R.drawable.ic_add_shopping_cart_black_24dp
+        }
+    }
+
+    internal inner class TextAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!) {
+        override fun getItem(position: Int): Fragment {
+            return demoFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return demoFragments.size
+        }
+
+        override fun getPageTitle(position: Int): CharSequence? {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                (fragment as FragmentPresenter).tabName
+            } else "Tab $position"
+        }
+    }
+
+    internal inner class CustomAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+        CustomView {
+        override fun getItem(position: Int): Fragment {
+            return demoFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return demoFragments.size
+        }
+
+        override fun getView(position: Int): View {
+            val fragment = demoFragments[position]
+            if (fragment is FragmentPresenter) {
+                val view = layoutInflater.inflate(R.layout.tab_item, null)
+                val title = view.findViewById<TextView>(R.id.tab_name)
+                title.text = (fragment as FragmentPresenter).tabName
+                val icon = view.findViewById<ImageView>(R.id.tab_icon)
+                icon.setImageResource((fragment as FragmentPresenter).tabImage)
+                return view
+            }
+            throw NotImplementedError("Improper implementation of CustomView adapter")
+        }
+    }
+
+    internal inner class CustomAnimAdapter(fm: FragmentManager?) : FragmentPagerAdapter(fm!!),
+        CustomView {
+        override fun getItem(position: Int): Fragment {
+            return demoFragments[position]
+        }
+
+        override fun getCount(): Int {
+            return demoFragments.size
+        }
+
+        override fun getView(position: Int): View {
+            val fragment = demoFragments[position]
+            return if (fragment is FragmentPresenter) {
+                TabItemView(
+                    applicationContext,
+                    (fragment as FragmentPresenter).tabName,
+                    (fragment as FragmentPresenter).tabImage,
+                    -0xc9c9ca,
+                    -0x10000
+                )
+            } else throw NotImplementedError("Improper implementation of CustomView adapter")
+        }
+    }
+
+    fun addDummyTab() {
+        demoFragments.add(DemoFragment())
+        binding.viewPager.adapter?.notifyDataSetChanged()
     }
 }

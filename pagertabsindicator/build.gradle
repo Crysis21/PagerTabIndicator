@@ -6,7 +6,7 @@ project.archivesBaseName = 'pagertabindicator'
 version = '1.0.11'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 15

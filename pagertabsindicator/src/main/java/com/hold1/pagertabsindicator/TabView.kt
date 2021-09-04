@@ -16,11 +16,11 @@ open class TabView : FrameLayout {
     private val currentBgColor = pressColor
     private var offset = 0f
 
-    constructor(context: Context?) : super(context) {
+    constructor(context: Context) : super(context) {
         setWillNotDraw(false)
     }
 
-    constructor(context: Context?, child: View?) : this(context) {
+    constructor(context: Context, child: View?) : this(context) {
         addView(child)
     }
 
