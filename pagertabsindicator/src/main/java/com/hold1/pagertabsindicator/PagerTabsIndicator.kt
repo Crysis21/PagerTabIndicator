@@ -2,25 +2,18 @@ package com.hold1.pagertabsindicator
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.database.DataSetObserver
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.Log
-import android.util.TypedValue
-import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
-import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import androidx.viewpager.widget.ViewPager.OnAdapterChangeListener
-import androidx.viewpager.widget.ViewPager.OnPageChangeListener
-import com.bumptech.glide.Glide
-import com.hold1.pagertabsindicator.TabViewProvider.CustomView
+import com.hold1.pagertabsindicator.adapters.TabsAdapter
 import kotlin.math.max
 import kotlin.math.roundToInt
 
