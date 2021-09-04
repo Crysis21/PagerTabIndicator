@@ -12,7 +12,7 @@ import com.hold1.pagertabsindicator.TabView
 /**
  * Created by Cristian Holdunu on 17/11/2017.
  */
-class TabItemView(context: Context?, title: String?, imgRes: Int, tabColor: Int, activeColor: Int) : TabView(context) {
+class TabItemView(context: Context, title: String?, imgRes: Int, tabColor: Int, activeColor: Int) : TabView(context) {
     private val tabTitle: TextView
     private val tabIcon: ImageView
     private val activeColor: Int

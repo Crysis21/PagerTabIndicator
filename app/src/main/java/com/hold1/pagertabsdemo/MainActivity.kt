@@ -24,8 +24,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
     //Just for easing the demo :)
-    var tabsIndicator: PagerTabsIndicator = binding.tabsIndicator
-        private set
+    val tabsIndicator: PagerTabsIndicator
+        get() {
+            return binding.tabsIndicator
+        }
+
     private var viewImageAdapter: PagerAdapter? = null
     private var webImageAdapter: PagerAdapter? = null
     private var viewCustomAdapter: PagerAdapter? = null
