@@ -8,4 +8,20 @@
         android:id="@+id/tabsFragment"
         android:name="com.hold1.pagertabsdemo.fragments.TabsFragment"
         android:label="TabsFragment" />
+    <fragment
+        android:id="@+id/colorsFragment"
+        android:name="com.hold1.pagertabsdemo.fragments.ColorsFragment"
+        android:label="ColorsFragment" />
+    <fragment
+        android:id="@+id/adaptersFragment"
+        android:name="com.hold1.pagertabsdemo.fragments.AdaptersFragment"
+        android:label="AdaptersFragment" />
+    <fragment
+        android:id="@+id/contactFragment"
+        android:name="com.hold1.pagertabsdemo.fragments.ContactFragment"
+        android:label="ContactFragment" />
+    <fragment
+        android:id="@+id/dividerFragment"
+        android:name="com.hold1.pagertabsdemo.fragments.DividerFragment"
+        android:label="DividerFragment" />
 </navigation>

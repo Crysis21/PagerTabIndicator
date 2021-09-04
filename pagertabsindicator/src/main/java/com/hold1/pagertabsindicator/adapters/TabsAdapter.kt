@@ -29,7 +29,7 @@ abstract class TabsAdapter() {
 
     abstract fun getCount(): Int
 
-    fun getTabAt(position: Int): View {
+    open fun getTabAt(position: Int): View {
         tabViewProvider?.let { viewProvider ->
             when (viewProvider) {
                 is TabViewProvider.ImageResource -> {
