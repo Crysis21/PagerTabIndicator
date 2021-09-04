@@ -34,7 +34,7 @@ class ViewPagerActivity : AppCompatActivity() {
     private var viewCustomAdapter: PagerAdapter? = null
     private var viewCustomAnimAdapter: PagerAdapter? = null
     private var viewTextAdapter: PagerAdapter? = null
-    private val demoFragments: MutableList<Fragment> = ArrayList()
+    private val demoFragments = mutableListOf<Fragment>()
 
     enum class TabAdapterType {
         TEXT, IMAGE, WEB, CUSTOM, CUSTOM_ANIM
@@ -49,11 +49,13 @@ class ViewPagerActivity : AppCompatActivity() {
         demoFragments.add(ColorsFragment())
         demoFragments.add(AdaptersFragment())
         demoFragments.add(ContactFragment())
+
         viewTextAdapter = TextAdapter(supportFragmentManager)
         viewImageAdapter = ImageAdapter(supportFragmentManager)
         webImageAdapter = WebImageAdapter(supportFragmentManager)
         viewCustomAdapter = AdapterResource(supportFragmentManager)
         viewCustomAnimAdapter = AnimAdapterResource(supportFragmentManager)
+
         binding.viewPager.adapter = viewCustomAdapter
         tabsIndicator.setAdapter(ViewPagerTabsAdapter(binding.viewPager))
         tabsIndicator.onItemSelectedListener = object : PagerTabsIndicator.OnItemSelectedListener {
@@ -117,10 +119,8 @@ class ViewPagerActivity : AppCompatActivity() {
         }
 
         override fun getTabIconResId(position: Int): Int {
-            val fragment = demoFragments[position]
-            return if (fragment is FragmentPresenter) {
-                (fragment as FragmentPresenter).tabImage
-            } else R.drawable.ic_add_shopping_cart_black_24dp
+            return (demoFragments[position] as? FragmentPresenter)?.tabImage
+                ?: R.drawable.ic_add_shopping_cart_black_24dp
         }
     }
 

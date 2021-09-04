@@ -6,10 +6,10 @@ import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.hold1.pagertabsindicator.TabViewProvider
 
-class ViewPager2TabsAdapter(val viewPager2: ViewPager2): TabsAdapter(viewPager2.context) {
+class ViewPager2TabsAdapter(val viewPager2: ViewPager2) : TabsAdapter(viewPager2.context) {
     private val pagerAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder> = viewPager2.adapter!!
 
-    private val onPageChangeCallback = object: ViewPager2.OnPageChangeCallback() {
+    private val onPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageScrolled(
             position: Int,
             positionOffset: Float,
@@ -27,7 +27,7 @@ class ViewPager2TabsAdapter(val viewPager2: ViewPager2): TabsAdapter(viewPager2.
         }
     }
 
-    private val adapterDataObserver = object: RecyclerView.AdapterDataObserver() {
+    private val adapterDataObserver = object : RecyclerView.AdapterDataObserver() {
         override fun onChanged() {
             pagerTabsIndicator?.invalidateViews()
         }
@@ -66,9 +66,17 @@ class ViewPager2TabsAdapter(val viewPager2: ViewPager2): TabsAdapter(viewPager2.
         return when (pagerAdapter) {
             is TabViewProvider.ImageResource -> {
                 val imageView = createImageView()
-                Glide.with(context)
-                    .load(pagerAdapter.getTabIconUri(position))
-                    .into(imageView)
+                pagerAdapter.getTabIconUri(position)?.let { uri ->
+                    Glide.with(context)
+                        .load(uri)
+                        .into(imageView)
+                } ?: run {
+                    imageView.setImageResource(
+                        (pagerAdapter as TabViewProvider.ImageResource).getTabIconResId(
+                            position
+                        )
+                    )
+                }
                 imageView
             }
             is TabViewProvider.ViewResource -> {

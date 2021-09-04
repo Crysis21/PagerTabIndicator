@@ -44,9 +44,13 @@ class ViewPagerTabsAdapter(viewPager: ViewPager) : TabsAdapter(viewPager.context
             when (pagerAdapter) {
                 is TabViewProvider.ImageResource -> {
                     val imageView = createImageView()
-                    Glide.with(context)
-                            .load(pagerAdapter.getTabIconUri(position))
+                    pagerAdapter.getTabIconUri(position)?.let { uri ->
+                        Glide.with(context)
+                            .load(uri)
                             .into(imageView)
+                    } ?: run {
+                        imageView.setImageResource(pagerAdapter.getTabIconResId(position))
+                    }
                     return@getTabAt imageView
                 }
                 is TabViewProvider.ViewResource -> {
