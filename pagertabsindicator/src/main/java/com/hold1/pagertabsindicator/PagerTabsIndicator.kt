@@ -365,64 +365,48 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
+        drawIndicatorBackground(canvas)
         drawIndicator(canvas)
         drawDivider(canvas)
     }
 
-    private fun drawIndicator(canvas: Canvas) {
-        if (!showBarIndicator) return
+    private fun drawIndicatorBackground(canvas: Canvas) {
         bgRect.left = 0f
         bgRect.right = max(right, tabsContainer.width).toFloat()
 
-        var tab: View? = tabsContainer.getChildAt(position) ?: return
-        if (isDisableTabAnimation) {
-            tab = tabsContainer.getChildAt((position + positionOffset).roundToInt())
-        }
-        tab?.let { currentTab ->
-            indicatorRect.left = currentTab.left
-            indicatorRect.right = currentTab.right
-        }
-        adapter?.let {
-            if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
-                val nextTab = tabsContainer.getChildAt(position + 1)
-                indicatorRect.left =
-                    (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
-                indicatorRect.right =
-                    (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
-            }
-        }
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
                 bgRect.top = 0f
                 bgRect.bottom = indicatorBgHeight.toFloat()
-                indicatorRect.top = indicatorMargin
-                indicatorRect.bottom = indicatorHeight + indicatorMargin
             }
             TAB_INDICATOR_BOTTOM -> {
                 bgRect.top = (height - indicatorBgHeight).toFloat()
                 bgRect.bottom = height.toFloat()
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
             }
             else -> {
                 bgRect.top = (height - indicatorBgHeight).toFloat()
                 bgRect.bottom = height.toFloat()
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
             }
         }
         canvas.drawRect(bgRect, backgroundPaint)
-        if (indicatorDrawable == null) canvas.drawRect(indicatorRect, tintPaint) else {
+    }
+
+    private fun drawIndicator(canvas: Canvas) {
+        if (!showBarIndicator) return
+
+        indicatorDrawable?.let { drawable ->
             if (indicatorScaleType == SCALE_CENTER_INSIDE) {
                 //Adjust the indicator bounds aspect ratio to keep the indicator resource intact
                 val ratio =
-                    (indicatorDrawable!!.intrinsicHeight / indicatorDrawable!!.intrinsicWidth).toFloat()
+                    (drawable.intrinsicHeight / drawable.intrinsicWidth).toFloat()
                 val scaledWidth = indicatorHeight * ratio
                 indicatorRect.left = (indicatorRect.centerX() - scaledWidth / 2).toInt()
                 indicatorRect.right = (indicatorRect.left + scaledWidth).toInt()
             }
-            indicatorDrawable!!.bounds = indicatorRect
-            indicatorDrawable!!.draw(canvas)
+            drawable.bounds = indicatorRect
+            drawable.draw(canvas)
+        } ?: run {
+            canvas.drawRect(indicatorRect, tintPaint)
         }
     }
 
@@ -481,6 +465,61 @@ class PagerTabsIndicator @JvmOverloads constructor(
                 child.onOffset(0f)
             }
         }
+
+        //TODO: move to layout part
+        when (indicatorType) {
+            TAB_INDICATOR_TOP -> {
+                indicatorRect.top = indicatorMargin
+                indicatorRect.bottom = indicatorHeight + indicatorMargin
+            }
+            TAB_INDICATOR_BOTTOM -> {
+                indicatorRect.top = height - indicatorHeight - indicatorMargin
+                indicatorRect.bottom = height - indicatorMargin
+            }
+            else -> {
+                indicatorRect.top = height - indicatorHeight - indicatorMargin
+                indicatorRect.bottom = height - indicatorMargin
+            }
+        }
+
+        if (isDisableTabAnimation) {
+            tabsContainer.getChildAt((position + positionOffset).roundToInt())?.let { nextTab ->
+                indicatorRect.left = nextTab.left
+                indicatorRect.right = nextTab.right
+            }
+        } else {
+            tabsContainer.getChildAt(position)?.let { currentTab ->
+                indicatorRect.left = currentTab.left
+                indicatorRect.right = currentTab.right
+            }
+            adapter?.let {
+                if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
+                    val nextTab = tabsContainer.getChildAt(position + 1)
+                    indicatorRect.left =
+                        (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
+                    indicatorRect.right =
+                        (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+                }
+            }
+        }
+
+//        var tab: View? = tabsContainer.getChildAt(position) ?: return
+//        if (isDisableTabAnimation) {
+//            tab = tabsContainer.getChildAt((position + positionOffset).roundToInt())
+//        }
+//        tab?.let { currentTab ->
+//            indicatorRect.left = currentTab.left
+//            indicatorRect.right = currentTab.right
+//        }
+//        adapter?.let {
+//            if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
+//                val nextTab = tabsContainer.getChildAt(position + 1)
+//                indicatorRect.left =
+//                    (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
+//                indicatorRect.right =
+//                    (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+//            }
+//        }
         invalidate()
     }
 

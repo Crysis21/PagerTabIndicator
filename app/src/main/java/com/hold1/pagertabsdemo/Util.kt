@@ -1,6 +1,8 @@
 package com.hold1.pagertabsdemo
 
 import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.RectF
 
 /**
  * Created by Cristian Holdunu on 20/11/2017.
@@ -8,7 +10,12 @@ import android.graphics.Color
 object Util {
     @JvmStatic
     fun getColorWithOpacity(color: Int, opacity: Int): Int {
-        return Color.argb(opacity * 255 / 100, Color.red(color), Color.green(color), Color.blue(color))
+        return Color.argb(
+            opacity * 255 / 100,
+            Color.red(color),
+            Color.green(color),
+            Color.blue(color)
+        )
     }
 
     @JvmStatic
@@ -28,4 +35,18 @@ object Util {
                 (color2 and 0xff).toFloat() * inverseAmount).toInt() and 0xff
         return a shl ALPHA_CHANNEL.toInt() or (r shl RED_CHANNEL.toInt()) or (g shl GREEN_CHANNEL.toInt()) or (b shl BLUE_CHANNEL.toInt())
     }
+}
+
+fun Rect.toRectF(): RectF {
+    return RectF(
+        this.left.toFloat(), this.top.toFloat(), this.right.toFloat(),
+        this.bottom.toFloat()
+    )
+}
+
+fun RectF.toRect(): Rect {
+    return Rect(
+        this.left.toInt(), this.top.toInt(), this.right.toInt(),
+        this.bottom.toInt()
+    )
 }
