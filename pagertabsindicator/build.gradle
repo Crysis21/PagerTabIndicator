@@ -1,9 +1,33 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
-group = 'com.hold1'
-project.archivesBaseName = 'pagertabindicator'
-version = '1.0.11'
+ext {
+    PUBLISH_GROUP_ID = 'ro.holdone'
+    PUBLISH_ARTIFACT_ID = 'pagertabindicator'
+    PUBLISH_VERSION = "2.0.0-alpha01"
+
+    POM_NAME = 'pagertabindicator'
+    POM_PACKAGING = 'aar'
+
+    POM_DESCRIPTION = 'A flexible library for adding tabs to a view pager.'
+    POM_INCEPTION_YEAR = '2017'
+
+    POM_URL = 'https://github.com/Crysis21/PagerTabIndicator'
+    POM_SCM_URL = 'https://github.com/Crysis21/PagerTabIndicator'
+    POM_SCM_CONNECTION = 'scm:git@github.com:Crysis21/PagerTabIndicator.git'
+    POM_SCM_DEV_CONNECTION = 'scm:git@github.com:Crysis21/PagerTabIndicator.git'
+
+    POM_LICENCE_NAME = 'The Apache Software License, Version 2.0'
+    POM_LICENCE_URL = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    POM_LICENCE_DIST = 'repo'
+
+    POM_DEVELOPER_ID = 'Crysis21'
+    POM_DEVELOPER_NAME = 'Cristian Holdunu'
+    POM_DEVELOPER_URL = 'https://holdone.ro'
+    POM_DEVELOPER_EMAIL = "cristian.holdunu@gmail.com"
+}
+
+apply from: "${rootProject.projectDir}/scripts/gradle-publishing.gradle"
 
 android {
     compileSdkVersion 30
@@ -30,63 +54,3 @@ dependencies {
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-
-//install {
-//    repositories.mavenInstaller {
-//        pom.project {
-//            name 'PagerTabIndicator'
-//            description 'A flexible library for adding tabs to a view pager.'
-//            url 'https://github.com/Crysis21/PagerTabIndicator'
-//            inceptionYear '2017'
-//
-//            packaging 'aar'
-//            groupId "com.hold1"
-//            artifactId "pagertabindicator"
-//            version '1.0.11'
-//
-//            licenses {
-//                license {
-//                    name 'The Apache Software License, Version 2.0'
-//                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-//                    distribution 'repo'
-//                }
-//            }
-//            scm {
-//                connection 'https://github.com/Crysis21/PagerTabIndicator.git'
-//                url 'https://github.com/Crysis21/PagerTabIndicator'
-//
-//            }
-//            developers {
-//                developer {
-//                    name 'Cristian Holdunu'
-//                }
-//            }
-//        }
-//    }
-//}
-
-//bintray {
-//    user = BINTRAY_USER
-//    key = BINTRAY_KEY
-//    configurations = ['archives']
-//
-//    pkg {
-//        repo = 'Android'
-//        name = 'PagerTabIndicator'
-//        userOrg = 'crysis21'
-//        licenses = ['Apache-2.0']
-//        vcsUrl = 'https://github.com/bintray/gradle-bintray-plugin.git'
-//        version {
-//            name = version
-//            desc = 'PagerTabIndicator ' + version
-//            vcsTag = version
-//            released = new Date()
-//            version {
-//                name = '1.0.11'
-//                desc = 'A flexible library for adding tabs to a view pager.'
-//                vcsTag = '1.0.11'
-//                attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-//            }
-//        }
-//    }
-//}
