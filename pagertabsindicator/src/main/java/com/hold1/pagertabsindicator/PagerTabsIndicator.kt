@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.LinearInterpolator
 import android.widget.*
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
@@ -192,7 +193,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
             invalidate()
         }
 
-    private var position = 0
+    private var position = -1
     private var targetPosition = -1
     private var positionOffset = 0f
     private var lastScrollX = 0
@@ -200,7 +201,10 @@ class PagerTabsIndicator @JvmOverloads constructor(
     private var runnable: Runnable? = null
     private val bgRect = RectF()
     private val indicatorRect = Rect()
-    private val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
+    private val valueAnimator = ValueAnimator.ofInt().apply {
+        this.interpolator = LinearInterpolator()
+        this.duration = 200
+    }
 
     init {
         isHorizontalScrollBarEnabled = false
@@ -280,10 +284,8 @@ class PagerTabsIndicator @JvmOverloads constructor(
         )
         typedArray.recycle()
 
-        valueAnimator.duration = 5000
         valueAnimator.addUpdateListener {
-            indicatorRect.left = ((it.animatedValue as Float) - tabWidth / 2).toInt()
-            indicatorRect.right = indicatorRect.left + tabWidth
+            setIndicatorBounds(it.animatedValue as Int)
             invalidate()
         }
     }
@@ -295,6 +297,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
         Log.d(TAG, "layout width=" + (r - l))
+        getTabAt(position)?.let { setIndicatorBounds(it.right - tabWidth / 2) }
         if (!changed) return
         val newWidth = r - l
         val childCount = tabsContainer.childCount
@@ -512,24 +515,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
                 }
             }
         }
-
-//        var tab: View? = tabsContainer.getChildAt(position) ?: return
-//        if (isDisableTabAnimation) {
-//            tab = tabsContainer.getChildAt((position + positionOffset).roundToInt())
-//        }
-//        tab?.let { currentTab ->
-//            indicatorRect.left = currentTab.left
-//            indicatorRect.right = currentTab.right
-//        }
-//        adapter?.let {
-//            if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
-//                val nextTab = tabsContainer.getChildAt(position + 1)
-//                indicatorRect.left =
-//                    (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
-//                indicatorRect.right =
-//                    (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
-//            }
-//        }
         invalidate()
     }
 
@@ -541,7 +526,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageScrollStateChanged(state: Int) {
         if (state == ViewPager.SCROLL_STATE_IDLE) {
-            if (targetPosition != -1) setTabSelected(targetPosition)
+            if (targetPosition != -1) setTabSelected(targetPosition, false)
             targetPosition = -1
         }
     }
@@ -568,11 +553,17 @@ class PagerTabsIndicator @JvmOverloads constructor(
         }
         if (animated && startX != -1 && endX != -1) {
             valueAnimator.cancel()
-            valueAnimator.setFloatValues(startX.toFloat(), endX.toFloat())
+            valueAnimator.setIntValues(indicatorRect.centerX(), endX)
             valueAnimator.start()
         } else {
-
+            setIndicatorBounds(endX)
         }
+    }
+
+    private fun setIndicatorBounds(withCenter: Int) {
+        Log.d(TAG, "setIndicatorBounds center=$withCenter")
+        indicatorRect.left = (withCenter - tabWidth / 2)
+        indicatorRect.right = indicatorRect.left + tabWidth
     }
 
     private fun animateToTab(position: Int) {
