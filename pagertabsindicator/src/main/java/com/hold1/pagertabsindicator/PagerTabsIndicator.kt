@@ -1,5 +1,6 @@
 package com.hold1.pagertabsindicator
 
+import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RestrictTo
 import androidx.core.view.ViewCompat
+import androidx.core.view.get
 import androidx.viewpager.widget.ViewPager
 import com.hold1.pagertabsindicator.adapters.TabsAdapter
 import kotlin.math.max
@@ -198,6 +200,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     private var runnable: Runnable? = null
     private val bgRect = RectF()
     private val indicatorRect = Rect()
+    private val valueAnimator = ValueAnimator.ofFloat(0f, 1f)
 
     init {
         isHorizontalScrollBarEnabled = false
@@ -276,6 +279,13 @@ class PagerTabsIndicator @JvmOverloads constructor(
             isDisableTabAnimation
         )
         typedArray.recycle()
+
+        valueAnimator.duration = 5000
+        valueAnimator.addUpdateListener {
+            indicatorRect.left = ((it.animatedValue as Float) - tabWidth / 2).toInt()
+            indicatorRect.right = indicatorRect.left + tabWidth
+            invalidate()
+        }
     }
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
@@ -394,6 +404,22 @@ class PagerTabsIndicator @JvmOverloads constructor(
     private fun drawIndicator(canvas: Canvas) {
         if (!showBarIndicator) return
 
+        //TODO: move to layout part
+        when (indicatorType) {
+            TAB_INDICATOR_TOP -> {
+                indicatorRect.top = indicatorMargin
+                indicatorRect.bottom = indicatorHeight + indicatorMargin
+            }
+            TAB_INDICATOR_BOTTOM -> {
+                indicatorRect.top = height - indicatorHeight - indicatorMargin
+                indicatorRect.bottom = height - indicatorMargin
+            }
+            else -> {
+                indicatorRect.top = height - indicatorHeight - indicatorMargin
+                indicatorRect.bottom = height - indicatorMargin
+            }
+        }
+
         indicatorDrawable?.let { drawable ->
             if (indicatorScaleType == SCALE_CENTER_INSIDE) {
                 //Adjust the indicator bounds aspect ratio to keep the indicator resource intact
@@ -466,22 +492,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
             }
         }
 
-        //TODO: move to layout part
-        when (indicatorType) {
-            TAB_INDICATOR_TOP -> {
-                indicatorRect.top = indicatorMargin
-                indicatorRect.bottom = indicatorHeight + indicatorMargin
-            }
-            TAB_INDICATOR_BOTTOM -> {
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
-            }
-            else -> {
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
-            }
-        }
-
         if (isDisableTabAnimation) {
             tabsContainer.getChildAt((position + positionOffset).roundToInt())?.let { nextTab ->
                 indicatorRect.left = nextTab.left
@@ -536,7 +546,16 @@ class PagerTabsIndicator @JvmOverloads constructor(
         }
     }
 
-    fun setTabSelected(position: Int) {
+    fun setTabSelected(position: Int, animated: Boolean = true) {
+        Log.d(TAG, "setTabSelected $position")
+        var startX = -1
+        var endX = -1
+        getTabAt(this.position)?.let {
+            startX = it.right - tabWidth / 2
+        }
+        getTabAt(position)?.let {
+            endX = it.right - tabWidth / 2
+        }
         this.position = position
         val tabCount = tabsContainer.childCount
         for (i in 0 until tabCount) {
@@ -546,6 +565,13 @@ class PagerTabsIndicator @JvmOverloads constructor(
             if (isSelected) {
                 animateToTab(position)
             }
+        }
+        if (animated && startX != -1 && endX != -1) {
+            valueAnimator.cancel()
+            valueAnimator.setFloatValues(startX.toFloat(), endX.toFloat())
+            valueAnimator.start()
+        } else {
+
         }
     }
 
