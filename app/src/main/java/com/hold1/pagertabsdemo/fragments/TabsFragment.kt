@@ -63,7 +63,7 @@ class TabsFragment : Fragment(), FragmentPresenter {
         })
         binding.indicatorBgHeight.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                tabsIndicator?.indicatorBgHeight = progress
+                tabsIndicator?.indicatorBackgroundHeight = progress
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}
@@ -71,7 +71,7 @@ class TabsFragment : Fragment(), FragmentPresenter {
         })
         binding.indicatorMargin.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
-                tabsIndicator?.indicatorMargin = progress
+                tabsIndicator?.indicatorVerticalOffset = progress
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar) {}

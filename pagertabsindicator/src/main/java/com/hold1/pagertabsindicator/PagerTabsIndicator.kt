@@ -13,8 +13,8 @@ import android.view.ViewGroup
 import android.view.animation.LinearInterpolator
 import android.widget.*
 import androidx.annotation.RestrictTo
+import androidx.core.graphics.toRectF
 import androidx.core.view.ViewCompat
-import androidx.core.view.get
 import androidx.viewpager.widget.ViewPager
 import com.hold1.pagertabsindicator.adapters.TabsAdapter
 import kotlin.math.max
@@ -27,7 +27,9 @@ import kotlin.math.roundToInt
 class PagerTabsIndicator @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : HorizontalScrollView(context, attrs) {
+    private var tabsContainer: LinearLayout = LinearLayout(context)
 
+    // Callbacks
     interface OnItemSelectedListener {
         fun onItemSelected(position: Int)
     }
@@ -36,28 +38,51 @@ class PagerTabsIndicator @JvmOverloads constructor(
         fun onItemReselected(position: Int)
     }
 
-    private var adapter: TabsAdapter? = null
     var onItemSelectedListener: OnItemSelectedListener? = null
     var onItemReselectedListener: OnItemReselectedListener? = null
 
-    private var tabsContainer: LinearLayout = LinearLayout(context)
 
-    var indicatorType = TAB_INDICATOR_BOTTOM
+    private var adapter: TabsAdapter? = null
+
+
+    // Indicator Properties
+    var showBarIndicator = true
         set(value) {
             field = value
             invalidate()
+        }
+    var indicatorType = TAB_INDICATOR_BOTTOM
+        set(value) {
+            field = value
+            requestLayout()
         }
     var indicatorHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_height)
         set(value) {
             field = value
             invalidate()
         }
-    var indicatorBgHeight = resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
+    var indicatorBackgroundHeight =
+        resources.getDimensionPixelSize(R.dimen.tab_default_indicator_bg_height)
         set(value) {
             field = value
             invalidate()
         }
-    var indicatorMargin = 0
+    var indicatorWidth: Int = -1
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorWidthPercent: Float = 0.0F
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorVerticalOffset = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
+    var indicatorCornerRadius: Float = 0.0f
         set(value) {
             field = value
             invalidate()
@@ -95,6 +120,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
             invalidate()
         }
 
+    // Painting
     private var backgroundPaint: Paint = Paint().apply {
         this.color = indicatorBgColor
         this.style = Paint.Style.FILL
@@ -111,6 +137,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
         this.isAntiAlias = true
     }
 
+    //Divider resources
     var isShowDivider = true
         set(value) {
             field = value
@@ -152,6 +179,8 @@ class PagerTabsIndicator @JvmOverloads constructor(
             field = value
             invalidate()
         }
+
+    // Tab properties
     var isHighlightText = false
         set(value) {
             field = value
@@ -177,15 +206,12 @@ class PagerTabsIndicator @JvmOverloads constructor(
             field = value
             invalidate()
         }
+
+    // Generic properties
     var isLockExpanded = false
         set(value) {
             field = value
             requestLayout()
-        }
-    var showBarIndicator = true
-        set(value) {
-            field = value
-            invalidate()
         }
     var isDisableTabAnimation = false
         set(value) {
@@ -199,7 +225,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     private var lastScrollX = 0
     private var tabWidth = ViewGroup.LayoutParams.WRAP_CONTENT
     private var runnable: Runnable? = null
-    private val bgRect = RectF()
+    private val indicatorBackgroundRect = RectF()
     private val indicatorRect = Rect()
     private val valueAnimator = ValueAnimator.ofInt().apply {
         this.interpolator = LinearInterpolator()
@@ -238,18 +264,18 @@ class PagerTabsIndicator @JvmOverloads constructor(
             R.styleable.PagerTabsIndicator_tab_indicator_height,
             indicatorHeight
         )
-        indicatorBgHeight = typedArray.getDimensionPixelSize(
-            R.styleable.PagerTabsIndicator_tab_indicator_bg_height,
-            indicatorBgHeight
+        indicatorBackgroundHeight = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_background_height,
+            indicatorBackgroundHeight
         )
-        indicatorMargin = typedArray.getDimensionPixelSize(
-            R.styleable.PagerTabsIndicator_tab_indicator_margin,
-            indicatorMargin
+        indicatorVerticalOffset = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_vertical_offset,
+            indicatorVerticalOffset
         )
         indicatorColor =
             typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_color, indicatorColor)
         indicatorBgColor = typedArray.getColor(
-            R.styleable.PagerTabsIndicator_tab_indicator_bg_color,
+            R.styleable.PagerTabsIndicator_tab_indicator_background_color,
             indicatorBgColor
         )
         dividerWidth = typedArray.getDimensionPixelSize(
@@ -281,6 +307,18 @@ class PagerTabsIndicator @JvmOverloads constructor(
         isDisableTabAnimation = typedArray.getBoolean(
             R.styleable.PagerTabsIndicator_tab_disable_animation,
             isDisableTabAnimation
+        )
+        indicatorCornerRadius = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_corner_radius,
+            0
+        ).toFloat()
+        indicatorWidth = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_width,
+            indicatorWidth
+        )
+        indicatorWidthPercent = typedArray.getFloat(
+            R.styleable.PagerTabsIndicator_tab_indicator_width_percent,
+            indicatorWidthPercent
         )
         typedArray.recycle()
 
@@ -325,11 +363,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
         val lp = child.layoutParams as MarginLayoutParams
         if (showBarIndicator) when (indicatorType) {
             TAB_INDICATOR_TOP -> {
-                lp.topMargin = indicatorBgHeight
+                lp.topMargin = indicatorBackgroundHeight
                 lp.bottomMargin = 0
             }
             TAB_INDICATOR_BOTTOM -> {
-                lp.bottomMargin = indicatorBgHeight
+                lp.bottomMargin = indicatorBackgroundHeight
                 lp.topMargin = 0
             }
         } else {
@@ -384,24 +422,29 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     private fun drawIndicatorBackground(canvas: Canvas) {
-        bgRect.left = 0f
-        bgRect.right = max(right, tabsContainer.width).toFloat()
+        indicatorBackgroundRect.left = 0f
+        indicatorBackgroundRect.right = max(right, tabsContainer.width).toFloat()
 
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
-                bgRect.top = 0f
-                bgRect.bottom = indicatorBgHeight.toFloat()
+                indicatorBackgroundRect.top = 0f
+                indicatorBackgroundRect.bottom = indicatorBackgroundHeight.toFloat()
             }
             TAB_INDICATOR_BOTTOM -> {
-                bgRect.top = (height - indicatorBgHeight).toFloat()
-                bgRect.bottom = height.toFloat()
+                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight).toFloat()
+                indicatorBackgroundRect.bottom = height.toFloat()
             }
             else -> {
-                bgRect.top = (height - indicatorBgHeight).toFloat()
-                bgRect.bottom = height.toFloat()
+                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight).toFloat()
+                indicatorBackgroundRect.bottom = height.toFloat()
             }
         }
-        canvas.drawRect(bgRect, backgroundPaint)
+        canvas.drawRoundRect(
+            indicatorBackgroundRect,
+            indicatorCornerRadius,
+            indicatorCornerRadius,
+            backgroundPaint
+        )
     }
 
     private fun drawIndicator(canvas: Canvas) {
@@ -410,16 +453,16 @@ class PagerTabsIndicator @JvmOverloads constructor(
         //TODO: move to layout part
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
-                indicatorRect.top = indicatorMargin
-                indicatorRect.bottom = indicatorHeight + indicatorMargin
+                indicatorRect.top = indicatorVerticalOffset
+                indicatorRect.bottom = indicatorHeight + indicatorVerticalOffset
             }
             TAB_INDICATOR_BOTTOM -> {
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
+                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset
+                indicatorRect.bottom = height - indicatorVerticalOffset
             }
             else -> {
-                indicatorRect.top = height - indicatorHeight - indicatorMargin
-                indicatorRect.bottom = height - indicatorMargin
+                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset
+                indicatorRect.bottom = height - indicatorVerticalOffset
             }
         }
 
@@ -435,7 +478,12 @@ class PagerTabsIndicator @JvmOverloads constructor(
             drawable.bounds = indicatorRect
             drawable.draw(canvas)
         } ?: run {
-            canvas.drawRect(indicatorRect, tintPaint)
+            canvas.drawRoundRect(
+                indicatorRect.toRectF(),
+                indicatorCornerRadius,
+                indicatorCornerRadius,
+                tintPaint
+            )
         }
     }
 
@@ -449,9 +497,9 @@ class PagerTabsIndicator @JvmOverloads constructor(
             var endY = height
             if (indicatorType == TAB_INDICATOR_BOTTOM) {
                 startY = dividerMargin
-                endY = height - indicatorBgHeight - dividerMargin
+                endY = height - indicatorBackgroundHeight - dividerMargin
             } else if (indicatorType == TAB_INDICATOR_TOP) {
-                startY = indicatorBgHeight + dividerMargin
+                startY = indicatorBackgroundHeight + dividerMargin
                 endY = height - dividerMargin
             }
 
@@ -497,21 +545,17 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
         if (isDisableTabAnimation) {
             tabsContainer.getChildAt((position + positionOffset).roundToInt())?.let { nextTab ->
-                indicatorRect.left = nextTab.left
-                indicatorRect.right = nextTab.right
+                setIndicatorBounds(nextTab.getCenterX())
+
             }
         } else {
             tabsContainer.getChildAt(position)?.let { currentTab ->
-                indicatorRect.left = currentTab.left
-                indicatorRect.right = currentTab.right
+                setIndicatorBounds(currentTab.getCenterX())
             }
             adapter?.let {
                 if (positionOffset > 0f && position < it.getCount() - 1 && !isDisableTabAnimation) {
                     val nextTab = tabsContainer.getChildAt(position + 1)
-                    indicatorRect.left =
-                        (positionOffset * nextTab.left + (1f - positionOffset) * indicatorRect.left).toInt()
-                    indicatorRect.right =
-                        (positionOffset * nextTab.right + (1f - positionOffset) * indicatorRect.right).toInt()
+                    setIndicatorBounds((positionOffset * nextTab.getCenterX() + (1f - positionOffset) * indicatorRect.centerX()).toInt())
                 }
             }
         }
@@ -562,8 +606,14 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
     private fun setIndicatorBounds(withCenter: Int) {
         Log.d(TAG, "setIndicatorBounds center=$withCenter")
-        indicatorRect.left = (withCenter - tabWidth / 2)
-        indicatorRect.right = indicatorRect.left + tabWidth
+        val drawWidth = when {
+            indicatorWidthPercent > 0 -> (tabWidth * indicatorWidthPercent).toInt()
+            indicatorWidth > -1 -> indicatorWidth
+            else -> tabWidth
+        }
+
+        indicatorRect.left = (withCenter - drawWidth / 2)
+        indicatorRect.right = indicatorRect.left + drawWidth
     }
 
     private fun animateToTab(position: Int) {
@@ -609,4 +659,8 @@ class PagerTabsIndicator @JvmOverloads constructor(
         const val SCALE_FIT_XY = 0
         const val SCALE_CENTER_INSIDE = 1
     }
+}
+
+fun View.getCenterX(): Int {
+    return right - measuredWidth / 2
 }
