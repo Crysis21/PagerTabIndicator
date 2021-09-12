@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.hold1.pagertabsdemo.databinding.ActivityNavigationBinding
-import com.hold1.pagertabsdemo.fragments.TabInfo
+import com.hold1.pagertabsindicator.TabInfo
 import com.hold1.pagertabsindicator.PagerTabsIndicator
 import com.hold1.pagertabsindicator.TabViewProvider
 import com.hold1.pagertabsindicator.adapters.TabsAdapter
@@ -37,12 +37,12 @@ class JetpackNavigationActivity : AppCompatActivity() {
         binding.tabsIndicator.setAdapter(tabsAdapter)
         binding.tabsIndicator.onItemSelectedListener = object: PagerTabsIndicator.OnItemSelectedListener {
             override fun onItemSelected(position: Int) {
-                navController.navigate(tabInfos[position].id)
+                navController.navigate(tabInfos[position].destinationId)
             }
         }
         navController.addOnDestinationChangedListener { controller, destination, arguments ->
             tabInfos.forEachIndexed { index, info ->
-                if (info.id == destination.id) {
+                if (info.destinationId == destination.id) {
                     binding.tabsIndicator.setTabSelected(index)
                 }
             }
