@@ -406,9 +406,10 @@ class PagerTabsIndicator @JvmOverloads constructor(
         view?.setPadding(tabPadding, 0, tabPadding, 0)
         view?.setOnClickListener {
             Log.d(TAG, "tab click $position")
-            onItemSelectedListener?.onItemSelected(position)
             if (this.position == position) {
                 onItemReselectedListener?.onItemReselected(position)
+            } else {
+                onItemSelectedListener?.onItemSelected(position)
             }
             targetPosition = position
         }
