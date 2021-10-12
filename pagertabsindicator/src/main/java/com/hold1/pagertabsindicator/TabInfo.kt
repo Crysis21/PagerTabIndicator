@@ -1,6 +1,6 @@
 package com.hold1.pagertabsindicator
 
-data class TabInfo(
+open class TabInfo(
     val destinationId: Int,
     val name: String?,
     val imageUrl: String?,

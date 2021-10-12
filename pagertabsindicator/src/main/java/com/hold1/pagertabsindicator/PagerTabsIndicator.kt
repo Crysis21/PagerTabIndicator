@@ -335,7 +335,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
         Log.d(TAG, "layout width=" + (r - l))
-        getTabAt(position)?.let { setIndicatorBounds(it.right - tabWidth / 2) }
+        getTabAt(position)?.let { setIndicatorBounds(it.getCenterX()) }
         if (!changed) return
         val newWidth = r - l
         val childCount = tabsContainer.childCount
@@ -570,6 +570,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
     @RestrictTo(RestrictTo.Scope.LIBRARY_GROUP)
     fun onPageScrollStateChanged(state: Int) {
+        Log.d(TAG, "onPageScrollStateChanged $state")
         if (state == ViewPager.SCROLL_STATE_IDLE) {
             if (targetPosition != -1) setTabSelected(targetPosition, false)
             targetPosition = -1
@@ -581,10 +582,10 @@ class PagerTabsIndicator @JvmOverloads constructor(
         var startX = -1
         var endX = -1
         getTabAt(this.position)?.let {
-            startX = it.right - tabWidth / 2
+            startX = it.getCenterX()
         }
         getTabAt(position)?.let {
-            endX = it.right - tabWidth / 2
+            endX = it.getCenterX()
         }
         this.position = position
         val tabCount = tabsContainer.childCount
