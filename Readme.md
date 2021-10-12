@@ -1,30 +1,19 @@
 # Pager Tabs Indicator
 
-[ ![Download](https://api.bintray.com/packages/crysis21/Android/PagerTabIndicator/images/download.svg) ](https://bintray.com/crysis21/Android/PagerTabIndicator/_latestVersion)
-
-PagerTabIndicator is a customisable android library that is designed to work with the ViewPager component.
+PagerTabIndicator started as a customisable android library that designed to work with the ViewPager component. After a few years I decided to revamp the project for my current needs so I decided to update it to also support `ViewPager2` and Jetpack navigation. I'm updating the project as my time allows it. PRs are always welcome.
 
 #### Features
-* Support dynamic adapter switch of the ViewPager
+* Support dynamic adapter switch of the ViewPager / ViewPager2 / Jetpack Navigation
 * Customizable tab indicator (bottom/top/background)
 * Built in support for text/image/text+image tabs
 * Support for custom views in tabs
 
-For a test drive you can try the PlayStore demo app
-
-
-Give it a test drive with our sample app:
-
-https://play.google.com/store/apps/details?id=com.hold1.pagertabsdemo
-
-![Screenshot 1](https://s3-us-west-2.amazonaws.com/anaface-pictures/ss_1.png)![Screenshot 2](https://s3-us-west-2.amazonaws.com/anaface-pictures/ss_2.png)
-
 
 #### Installation
-Add the following line in your build.gradle file
+Project has been moved on maven central
 
 ```gradle
-compile 'com.hold1:pagertabindicator:1.0.7'
+implementation 'ro.holdone:pagertabindicator:2.0.0-alpha04'
 ```
 
 Inside your layout insert a PagerTabIndicator element
