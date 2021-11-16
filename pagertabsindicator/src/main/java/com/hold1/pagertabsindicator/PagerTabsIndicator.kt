@@ -334,7 +334,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
-        Log.d(TAG, "layout width=" + (r - l))
         getTabAt(position)?.let { setIndicatorBounds(it.getCenterX()) }
         if (!changed) return
         val newWidth = r - l
@@ -343,7 +342,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
             val newTabWidth = newWidth / childCount
             if (newTabWidth == 0) return
             tabWidth = newTabWidth
-            Log.d(TAG, "newWidth=$newWidth tabWidth=$tabWidth")
             for (i in 0 until tabsContainer.childCount) {
                 val view = tabsContainer.getChildAt(i)
                 view.layoutParams.width = tabWidth
@@ -607,7 +605,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     private fun setIndicatorBounds(withCenter: Int) {
-        Log.d(TAG, "setIndicatorBounds center=$withCenter")
         val drawWidth = when {
             indicatorWidthPercent > 0 -> (tabWidth * indicatorWidthPercent).toInt()
             indicatorWidth > -1 -> indicatorWidth
