@@ -14,6 +14,7 @@
         <attr name="tab_indicator_background_height" format="dimension"/>
         <attr name="tab_indicator_color" format="color"/>
         <attr name="tab_indicator_background_color" format="color"/>
+        <attr name="tab_indicator_background_offset" format="dimension"/>
         <attr name="tab_indicator_corner_radius" format="dimension"/>
         <attr name="tab_indicator_width" format="dimension"/>
         <attr name="tab_indicator_width_percent" format="float"/>

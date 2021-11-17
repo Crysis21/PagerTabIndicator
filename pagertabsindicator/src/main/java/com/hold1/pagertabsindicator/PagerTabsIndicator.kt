@@ -83,6 +83,11 @@ class PagerTabsIndicator @JvmOverloads constructor(
             field = value
             invalidate()
         }
+    var indicatorBackgroundVerticalOffset = 0
+        set(value) {
+            field = value
+            invalidate()
+        }
     var indicatorCornerRadius: Float = 0.0f
         set(value) {
             field = value
@@ -273,6 +278,10 @@ class PagerTabsIndicator @JvmOverloads constructor(
             R.styleable.PagerTabsIndicator_tab_indicator_vertical_offset,
             indicatorVerticalOffset
         )
+        indicatorBackgroundVerticalOffset = typedArray.getDimensionPixelSize(
+            R.styleable.PagerTabsIndicator_tab_indicator_background_offset,
+            indicatorBackgroundVerticalOffset
+        )
         indicatorColor =
             typedArray.getColor(R.styleable.PagerTabsIndicator_tab_indicator_color, indicatorColor)
         indicatorBgColor = typedArray.getColor(
@@ -350,6 +359,36 @@ class PagerTabsIndicator @JvmOverloads constructor(
             tabsContainer.layoutParams = tabsContainer.layoutParams
             tabsContainer.requestLayout()
         }
+
+        indicatorBackgroundRect.left = 0f
+        indicatorBackgroundRect.right = max(right, tabsContainer.width).toFloat()
+
+        when (indicatorType) {
+            TAB_INDICATOR_TOP -> {
+                indicatorBackgroundRect.top = paddingTop.toFloat() + indicatorBackgroundVerticalOffset
+                indicatorBackgroundRect.bottom = paddingTop + indicatorBackgroundHeight.toFloat() + indicatorBackgroundVerticalOffset
+            }
+            else -> {
+                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight - paddingBottom).toFloat() - indicatorBackgroundVerticalOffset
+                indicatorBackgroundRect.bottom = height.toFloat() - paddingBottom - indicatorBackgroundVerticalOffset
+            }
+        }
+
+        when (indicatorType) {
+            TAB_INDICATOR_TOP -> {
+                indicatorRect.top = indicatorVerticalOffset + paddingTop
+                indicatorRect.bottom = indicatorHeight + indicatorVerticalOffset
+            }
+            else -> {
+                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset - paddingBottom
+                indicatorRect.bottom = height - indicatorVerticalOffset - paddingBottom
+            }
+        }
+    }
+
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(measuredWidth, measuredHeight + indicatorBackgroundVerticalOffset)
     }
 
     override fun measureChildWithMargins(
@@ -422,19 +461,7 @@ class PagerTabsIndicator @JvmOverloads constructor(
     }
 
     private fun drawIndicatorBackground(canvas: Canvas) {
-        indicatorBackgroundRect.left = 0f
-        indicatorBackgroundRect.right = max(right, tabsContainer.width).toFloat()
 
-        when (indicatorType) {
-            TAB_INDICATOR_TOP -> {
-                indicatorBackgroundRect.top = paddingTop.toFloat()
-                indicatorBackgroundRect.bottom = paddingTop + indicatorBackgroundHeight.toFloat()
-            }
-            else -> {
-                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight - paddingBottom).toFloat()
-                indicatorBackgroundRect.bottom = height.toFloat() - paddingBottom
-            }
-        }
         canvas.drawRoundRect(
             indicatorBackgroundRect,
             indicatorCornerRadius,
@@ -445,18 +472,6 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
     private fun drawIndicator(canvas: Canvas) {
         if (!showBarIndicator) return
-
-        //TODO: move to layout part
-        when (indicatorType) {
-            TAB_INDICATOR_TOP -> {
-                indicatorRect.top = indicatorVerticalOffset + paddingTop
-                indicatorRect.bottom = indicatorHeight + indicatorVerticalOffset
-            }
-            else -> {
-                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset - paddingBottom
-                indicatorRect.bottom = height - indicatorVerticalOffset - paddingBottom
-            }
-        }
 
         indicatorDrawable?.let { drawable ->
             if (indicatorScaleType == SCALE_CENTER_INSIDE) {
