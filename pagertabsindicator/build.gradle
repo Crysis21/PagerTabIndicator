@@ -4,7 +4,7 @@ apply plugin: 'kotlin-android'
 ext {
     PUBLISH_GROUP_ID = 'ro.holdone'
     PUBLISH_ARTIFACT_ID = 'pagertabindicator'
-    PUBLISH_VERSION = "2.0.0-alpha04"
+    PUBLISH_VERSION = "2.0.0-alpha05"
 
     POM_NAME = 'pagertabindicator'
     POM_PACKAGING = 'aar'
