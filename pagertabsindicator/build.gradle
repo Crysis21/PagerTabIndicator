@@ -30,7 +30,7 @@ ext {
 apply from: "${rootProject.projectDir}/scripts/gradle-publishing.gradle"
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 15

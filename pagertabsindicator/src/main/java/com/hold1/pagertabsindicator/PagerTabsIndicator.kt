@@ -17,6 +17,7 @@ import androidx.core.graphics.toRectF
 import androidx.core.view.ViewCompat
 import androidx.viewpager.widget.ViewPager
 import com.hold1.pagertabsindicator.adapters.TabsAdapter
+import com.hold1.pagertabsindicator.extensions.getCenterX
 import kotlin.math.max
 import kotlin.math.roundToInt
 
@@ -426,16 +427,12 @@ class PagerTabsIndicator @JvmOverloads constructor(
 
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
-                indicatorBackgroundRect.top = 0f
-                indicatorBackgroundRect.bottom = indicatorBackgroundHeight.toFloat()
-            }
-            TAB_INDICATOR_BOTTOM -> {
-                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight).toFloat()
-                indicatorBackgroundRect.bottom = height.toFloat()
+                indicatorBackgroundRect.top = paddingTop.toFloat()
+                indicatorBackgroundRect.bottom = paddingTop + indicatorBackgroundHeight.toFloat()
             }
             else -> {
-                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight).toFloat()
-                indicatorBackgroundRect.bottom = height.toFloat()
+                indicatorBackgroundRect.top = (height - indicatorBackgroundHeight - paddingBottom).toFloat()
+                indicatorBackgroundRect.bottom = height.toFloat() - paddingBottom
             }
         }
         canvas.drawRoundRect(
@@ -452,16 +449,12 @@ class PagerTabsIndicator @JvmOverloads constructor(
         //TODO: move to layout part
         when (indicatorType) {
             TAB_INDICATOR_TOP -> {
-                indicatorRect.top = indicatorVerticalOffset
+                indicatorRect.top = indicatorVerticalOffset + paddingTop
                 indicatorRect.bottom = indicatorHeight + indicatorVerticalOffset
             }
-            TAB_INDICATOR_BOTTOM -> {
-                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset
-                indicatorRect.bottom = height - indicatorVerticalOffset
-            }
             else -> {
-                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset
-                indicatorRect.bottom = height - indicatorVerticalOffset
+                indicatorRect.top = height - indicatorHeight - indicatorVerticalOffset - paddingBottom
+                indicatorRect.bottom = height - indicatorVerticalOffset - paddingBottom
             }
         }
 
@@ -492,14 +485,14 @@ class PagerTabsIndicator @JvmOverloads constructor(
             val tab = tabsContainer.getChildAt(i)
             val startX = tab.right - dividerWidth / 2
             val endX = startX + dividerWidth
-            var startY = 0
-            var endY = height
+            var startY = paddingTop
+            var endY = height - paddingBottom
             if (indicatorType == TAB_INDICATOR_BOTTOM) {
-                startY = dividerMargin
-                endY = height - indicatorBackgroundHeight - dividerMargin
+                startY = dividerMargin + paddingTop
+                endY = height - indicatorBackgroundHeight - dividerMargin - paddingBottom
             } else if (indicatorType == TAB_INDICATOR_TOP) {
-                startY = indicatorBackgroundHeight + dividerMargin
-                endY = height - dividerMargin
+                startY = indicatorBackgroundHeight + dividerMargin + paddingTop
+                endY = height - dividerMargin - paddingBottom
             }
 
             dividerDrawable?.let { drawable ->
@@ -658,8 +651,4 @@ class PagerTabsIndicator @JvmOverloads constructor(
         const val SCALE_FIT_XY = 0
         const val SCALE_CENTER_INSIDE = 1
     }
-}
-
-fun View.getCenterX(): Int {
-    return right - measuredWidth / 2
 }
